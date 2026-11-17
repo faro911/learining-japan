@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kana Pintar — Latihan Hiragana Anti-Lupa</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --card-subtle: #f8fafc;
+      --fg: #0f172a;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --primary: #1d4ed8;
+      --primary-fg: #ffffff;
+      --tone-s-bg: #dbeafe;
+      --tone-s-border: #1d4ed8;
+      --tone-s-fg: #1e3a8a;
+      --tone-a-bg: #e0e7ff;
+      --tone-a-border: #4338ca;
+      --tone-a-fg: #312e81;
+      --tone-b-bg: #fef3c7;
+      --tone-b-border: #b45309;
+      --tone-b-fg: #78350f;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --card: #1e293b;
+        --card-subtle: #0f172a;
+        --fg: #f1f5f9;
+        --muted: #94a3b8;
+        --border: #334155;
+        --primary: #3b82f6;
+        --primary-fg: #ffffff;
+        --tone-s-bg: rgba(37, 99, 235, 0.22);
+        --tone-s-border: #60a5fa;
+        --tone-s-fg: #bfdbfe;
+        --tone-a-bg: rgba(99, 102, 241, 0.22);
+        --tone-a-border: #818cf8;
+        --tone-a-fg: #c7d2fe;
+        --tone-b-bg: rgba(245, 158, 11, 0.2);
+        --tone-b-border: #fbbf24;
+        --tone-b-fg: #fde68a;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+      user-select: none;
+    }
+
+    .app-shell {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 2px 0 0;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-badge {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tabs-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 14px;
+      min-height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--fg);
+      cursor: pointer;
+      transition: opacity 0.15s ease, transform 0.08s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-fg);
+      border-color: transparent;
+    }
+
+    .btn-sm {
+      min-height: 34px;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 720px) {
+      .main-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .stack-sm > * + * {
+      margin-top: 10px;
+    }
+
+    .stack-md > * + * {
+      margin-top: 14px;
+    }
+
+    .select-box {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--fg);
+    }
+
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .char-btn {
+      padding: 10px 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--fg);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .char-btn.active {
+      background: var(--primary);
+      color: var(--primary-fg);
+      border-color: transparent;
+    }
+
+    .kana-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .kana-display-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .kana-big {
+      font-size: 46px;
+      font-weight: 700;
+      line-height: 1.1;
+      padding: 8px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card-subtle);
+    }
+
+    .romaji-big {
+      font-size: 22px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .word-line {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .mnemonic-box {
+      background: var(--card-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .mnemonic-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .mnemonic-text {
+      color: var(--muted);
+    }
+
+    .nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .canvas-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .canvas-frame {
+      width: 240px;
+      height: 240px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--card);
+    }
+
+    #draw-canvas {
+      display: block;
+      width: 240px;
+      height: 240px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .grade-box {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--card-subtle);
+      font-size: 13px;
+      min-height: 76px;
+    }
+
+    .grade-box.tone-S {
+      background: var(--tone-s-bg);
+      border-color: var(--tone-s-border);
+      color: var(--tone-s-fg);
+    }
+
+    .grade-box.tone-A {
+      background: var(--tone-a-bg);
+      border-color: var(--tone-a-border);
+      color: var(--tone-a-fg);
+    }
+
+    .grade-box.tone-B {
+      background: var(--tone-b-bg);
+      border-color: var(--tone-b-border);
+      color: var(--tone-b-fg);
+    }
+
+    .grade-title {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .quiz-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .quiz-opt-btn {
+      padding: 16px 10px;
+      font-size: 20px;
+      font-weight: 800;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      color: var(--fg);
+      cursor: pointer;
+    }
+
+    .quiz-opt-btn.correct {
+      background: var(--tone-s-bg);
+      border-color: var(--tone-s-border);
+      color: var(--tone-s-fg);
+    }
+
+    .quiz-opt-btn.wrong {
+      background: var(--tone-b-bg);
+      border-color: var(--tone-b-border);
+      color: var(--tone-b-fg);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .tag-master {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--tone-b-bg);
+      border: 1px solid var(--tone-b-border);
+      color: var(--tone-b-fg);
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1 class="brand-title">🇯🇵 Kana Pintar — Belajar Hiragana dari 0</h1>
+        <p class="brand-sub">Metode Cicil 5 Huruf • Trik Jembatan Keledai • Ramah Buta Warna &amp; Offline</p>
+      </div>
+      <div class="header-actions">
+        <span id="progress-badge" class="pill-badge">0 / 46 ★ Dikuasai</span>
+        <button id="btn-reset-progress" type="button" class="btn btn-sm" title="Ulangi progres dari 0">↺ Reset</button>
+      </div>
+    </header>
+
+    <div class="tabs-bar" role="tablist">
+      <button id="tab-draw" type="button" role="tab" aria-selected="true" class="btn btn-primary">
+        ✏️ Gambar &amp; Nilai
+      </button>
+      <button id="tab-quiz" type="button" role="tab" aria-selected="false" class="btn">
+        🧠 Kuis Anti-Lupa
+      </button>
+    </div>
+
+    <!-- TAB 1: DRAW & GRADE -->
+    <main id="panel-draw" class="main-grid">
+      <section class="card stack-md">
+        <div>
+          <label for="packet-select" style="display:block; font-size:12px; color:var(--muted); margin-bottom:6px; font-weight:600;">
+            Pilih Paket Belajar (Cicil 5 Huruf):
+          </label>
+          <select id="packet-select" class="select-box"></select>
+        </div>
+
+        <div id="char-pills" class="char-grid"></div>
+
+        <div class="kana-hero">
+          <div class="kana-display-wrap">
+            <div id="info-kana" class="kana-big">あ</div>
+            <div>
+              <div>
+                <span id="info-romaji" class="romaji-big">A</span>
+                <span id="info-master-tag" class="tag-master hidden">★ Lulus</span>
+              </div>
+              <div id="info-word" class="word-line">あめ (Ame) = Hujan</div>
+            </div>
+          </div>
+          <button id="btn-audio" type="button" class="btn btn-sm">🔊 Dengar</button>
+        </div>
+
+        <div class="mnemonic-box">
+          <div class="mnemonic-title">💡 Trik Ingat (Jembatan Keledai):</div>
+          <div id="info-mnemonic" class="mnemonic-text"></div>
+        </div>
+
+        <div class="nav-row">
+          <button id="btn-prev" type="button" class="btn btn-sm">← Sebelumnya</button>
+          <span id="char-best-score" style="color:var(--muted); font-weight:600;">Belum dinilai</span>
+          <button id="btn-next" type="button" class="btn btn-sm">Berikutnya →</button>
+        </div>
+      </section>
+
+      <section class="card canvas-panel">
+        <div class="canvas-frame">
+          <canvas id="draw-canvas" width="200" height="200"></canvas>
+        </div>
+
+        <div class="controls-grid">
+          <button id="btn-ghost" type="button" class="btn btn-sm">👁 Bayangan: ON</button>
+          <button id="btn-clear" type="button" class="btn btn-sm">🧹 Hapus</button>
+          <button id="btn-grade" type="button" class="btn btn-sm btn-primary">✓ Nilai</button>
+        </div>
+
+        <div id="grade-box" class="grade-box">
+          <div id="grade-title" class="grade-title">Siap Berlatih ✍️</div>
+          <div id="grade-desc">
+            Ikuti bayangan huruf di kanvas, lalu klik <strong>Nilai</strong>. Kalau sudah ingat, matikan bayangan!
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- TAB 2: ANTI-FORGET QUIZ -->
+    <main id="panel-quiz" class="hidden">
+      <div class="quiz-top">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button id="quiz-scope-packet" type="button" class="btn btn-sm btn-primary">Paket Ini (5 Huruf)</button>
+          <button id="quiz-scope-all" type="button" class="btn btn-sm">Semua (46 Huruf)</button>
+        </div>
+        <div style="display:flex; gap:14px; font-size:14px; font-weight:700;">
+          <span>🔥 Beruntun: <strong id="quiz-streak">0</strong></span>
+          <span>✓ Skor: <strong id="quiz-score">0/0</strong></span>
+        </div>
+      </div>
+
+      <div class="main-grid">
+        <section class="card stack-sm" style="text-align:center; min-height:220px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+          <div id="quiz-prompt-label" style="font-size:13px; color:var(--muted); font-weight:600;">Apa bacaan huruf ini?</div>
+          <div id="quiz-prompt-main" style="font-size:64px; font-weight:700; line-height:1.1; margin:8px 0;">あ</div>
+          <button id="quiz-hint-btn" type="button" class="btn btn-sm">💡 Lihat Petunjuk</button>
+          <div id="quiz-hint-text" class="hidden" style="font-size:13px; color:var(--muted); max-width:340px;"></div>
+        </section>
+
+        <section class="stack-md">
+          <div id="quiz-options" class="quiz-options"></div>
+          <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:72px;">
+            <span id="quiz-feedback-text" style="font-size:13px; color:var(--muted);">Pilih satu jawaban yang paling tepat di atas.</span>
+            <button id="quiz-next-btn" type="button" class="btn btn-sm btn-primary hidden" style="flex-shrink:0;">Lanjut →</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const HIRAGANA_PACKETS = [
+      {
+        name: "Paket 1: Vokal (A-I-U-E-O)",
+        items: [
+          { kana: "あ", romaji: "a", word: "あめ (Ame) = Hujan", mnemonic: "Seperti huruf 'A' yang dilingkari tali, atau orang berteriak 'A!' karena tertimpa atap." },
+          { kana: "い", romaji: "i", word: "いぬ (Inu) = Anjing", mnemonic: "Dua garis sejajar seperti dua ekor Ikan (I) berenang berdampingan (kiri lebih panjang)." },
+          { kana: "う", romaji: "u", word: "うみ (Umi) = Laut", mnemonic: "Seperti orang menunduk memakai topi melihat Uang (U) jatuh di tanah." },
+          { kana: "え", romaji: "e", word: "えき (Eki) = Stasiun", mnemonic: "Mirip huruf Z bertopi, seperti burung Elang (E) yang sedang terbang miring." },
+          { kana: "お", romaji: "o", word: "おちゃ (Ocha) = Teh", mnemonic: "Mirip 'あ', tapi melingkar ke kanan seperti Orang (O) menendang bola (titik di kanan atas)." }
+        ]
+      },
+      {
+        name: "Paket 2: Baris K (KA-KI-KU-KE-KO)",
+        items: [
+          { kana: "か", romaji: "ka", word: "かさ (Kasa) = Payung", mnemonic: "Seperti pisau memotong KAyu atau huruf 'K' bengkok dengan satu titik di kanan." },
+          { kana: "き", romaji: "ki", word: "き (Ki) = Pohon", mnemonic: "Persis seperti Kunci (KI) kuno bergerigi dua di atas dan melengkung di bawah." },
+          { kana: "く", romaji: "ku", word: "くつ (Kutsu) = Sepatu", mnemonic: "Paling mudah diingat: seperti paruh burung KUtilang atau tanda '<'." },
+          { kana: "け", romaji: "ke", word: "けいたい (Keitai) = HP", mnemonic: "Seperti tiang pintu dan palang yang membentuk huruf 'K' tegak (KErangkeng)." },
+          { kana: "こ", romaji: "ko", word: "こども (Kodomo) = Anak", mnemonic: "Dua garis melengkung atas-bawah seperti KOlam ikan atau dua cacing bertumpuk." }
+        ]
+      },
+      {
+        name: "Paket 3: Baris S (SA-SHI-SU-SE-SO)",
+        items: [
+          { kana: "さ", romaji: "sa", word: "さかな (Sakana) = Ikan", mnemonic: "Mirip 'き' (kunci), tapi garis datarnya cuma satu (SA-tu ikat pinggang)." },
+          { kana: "し", romaji: "shi", word: "しお (Shio) = Garam", mnemonic: "Seperti mata pancing atau gagang payung terbalik yang mengait SI ikan." },
+          { kana: "す", romaji: "su", word: "すし (Sushi) = Sushi", mnemonic: "Seperti tali berputar membuat simpul melingkar di tengah (SUmpit melingkar)." },
+          { kana: "せ", romaji: "se", word: "せかい (Sekai) = Dunia", mnemonic: "Seperti mulut kotak terbuka yang mengunyah SEmua makanan." },
+          { kana: "そ", romaji: "so", word: "そら (Sora) = Langit", mnemonic: "Zig-zag angka 7 lalu huruf C di bawahnya, seperti jalan tikungan yang harus dilewati SOpan." }
+        ]
+      },
+      {
+        name: "Paket 4: Baris T (TA-CHI-TSU-TE-TO)",
+        items: [
+          { kana: "た", romaji: "ta", word: "たまご (Tamago) = Telur", mnemonic: "Terlihat seperti huruf 't' dan 'a' digabung bersebelahan menjadi 'TA'!" },
+          { kana: "ち", romaji: "chi", word: "ちず (Chizu) = Peta", mnemonic: "Persis angka 5 dicoret garis atasnya (ingat angka 5 = CHIli / cabai melengkung)." },
+          { kana: "つ", romaji: "tsu", word: "つき (Tsuki) = Bulan", mnemonic: "Seperti ombak TSUnami besar yang melengkung ke kanan lalu menukik ke bawah." },
+          { kana: "て", romaji: "te", word: "て (Te) = Tangan", mnemonic: "Seperti huruf 'T' yang kakinya melengkung seperti TElinga." },
+          { kana: "と", romaji: "to", word: "とけい (Tokei) = Jam", mnemonic: "Seperti jari kaki atau TOngkat yang tertancap duri kecil di atasnya." }
+        ]
+      },
+      {
+        name: "Paket 5: Baris N (NA-NI-NU-NE-NO)",
+        items: [
+          { kana: "な", romaji: "na", word: "なまえ (Namae) = Nama", mnemonic: "Kiri mirip tanda tambah, kanan ada simpul pita kecil di bawah (NAnti diikat)." },
+          { kana: "に", romaji: "ni", word: "にほん (Nihon) = Jepang", mnemonic: "Tiang lurus di kiri + tanda 'こ' di kanan, seperti jarum dan benang (NItis menjahit)." },
+          { kana: "ぬ", romaji: "nu", word: "ぬの (Nuno) = Kain", mnemonic: "Seperti mie melingkar dengan simpul buntut kecil di kanan (NUdle / mie kusut)." },
+          { kana: "ね", romaji: "ne", word: "ねこ (Neko) = Kucing", mnemonic: "Tiang kiri + zig-zag yang berakhir dengan ekor melingkar seperti ekor kucing (NEko)." },
+          { kana: "の", romaji: "no", word: "のみもの (Nomimono) = Minuman", mnemonic: "Satu tarikan melingkar seperti rambu dilarang (NO) atau obat nyamuk bakar." }
+        ]
+      },
+      {
+        name: "Paket 6: Baris H (HA-HI-FU-HE-HO)",
+        items: [
+          { kana: "は", romaji: "ha", word: "はな (Hana) = Bunga", mnemonic: "Tiang di kiri + huruf 'H' kecil bersimpul di kanan (HAmpir mirip huruf H!)." },
+          { kana: "ひ", romaji: "hi", word: "ひと (Hito) = Orang", mnemonic: "Seperti mulut lebar orang tertawa 'Hi hi hi!' (atau bentuk sepatu hak tinggi)." },
+          { kana: "ふ", romaji: "fu", word: "ふじさん (Fujisan) = Gunung Fuji", mnemonic: "Seperti Gunung FUji yang puncaknya bertopi awan diapit dua bukit kecil." },
+          { kana: "へ", romaji: "he", word: "へや (Heya) = Kamar", mnemonic: "Seperti atap gunung lancip ke atas, mirip orang mengangkat bahu sambil bilang 'He?'." },
+          { kana: "ほ", romaji: "ho", word: "ほし (Hoshi) = Bintang", mnemonic: "Mirip 'は', bedanya punya 2 garis atap di kanan: ingat 'HO-ho-ho' bertopi ganda!" }
+        ]
+      },
+      {
+        name: "Paket 7: Baris M (MA-MI-MU-ME-MO)",
+        items: [
+          { kana: "ま", romaji: "ma", word: "まど (Mado) = Jendela", mnemonic: "Seperti tiang kapal dengan 2 layar di atas dan satu simpul di bawah (MAma melipat layar)." },
+          { kana: "み", romaji: "mi", word: "みず (Mizu) = Air", mnemonic: "Persis gabungan angka 2 dan 1 (ingat: MInum air jam 21)." },
+          { kana: "む", romaji: "mu", word: "むし (Mushi) = Serangga", mnemonic: "Seperti kepala sapi bersuara 'MUUU' (ada tanduk, hidung melingkar, dan titik)." },
+          { kana: "め", romaji: "me", word: "め (Me) = Mata", mnemonic: "Mirip 'ぬ' tapi TANPA simpul ekor; bundar bersih seperti Mata (ME)." },
+          { kana: "も", romaji: "mo", word: "もも (Momo) = Persik", mnemonic: "Seperti kail pancing 'し' dipasang 2 umpan agar dapat ikan MOntok." }
+        ]
+      },
+      {
+        name: "Paket 8: Baris Y (YA-YU-YO)",
+        items: [
+          { kana: "や", romaji: "ya", word: "やま (Yama) = Gunung", mnemonic: "Seperti kepala hewan YAk bertanduk dua dan berleher miring." },
+          { kana: "ゆ", romaji: "yu", word: "ゆき (Yuki) = Salju", mnemonic: "Seperti ikan hiU (YU) berenang berputar dalam satu tarikan garis." },
+          { kana: "よ", romaji: "yo", word: "よる (Yoru) = Malam", mnemonic: "Seperti tangan memegang tali mainan YO-yo yang melingkar di bawah." }
+        ]
+      },
+      {
+        name: "Paket 9: Baris R (RA-RI-RU-RE-RO)",
+        items: [
+          { kana: "ら", romaji: "ra", word: "らいねん (Rainen) = Tahun depan", mnemonic: "Seperti angka 5 yang topi atasnya terlepas, mirip kursi santai RAja." },
+          { kana: "り", romaji: "ri", word: "りんご (Ringo) = Apel", mnemonic: "Dua garis vertikal sejajar (kanan lebih panjang), seperti dua batang bambu RIndang." },
+          { kana: "る", romaji: "ru", word: "るす (Rusu) = Tidak ada di rumah", mnemonic: "Seperti angka 3 yang ujung bawahnya melingkar menjadi simpul (RU-mah dikunci)." },
+          { kana: "れ", romaji: "re", word: "れいぞうこ (Reizouko) = Kulkas", mnemonic: "Tiang kiri + zig-zag yang ujungnya mencuat ke kanan atas (REm mendadak terpelanting)." },
+          { kana: "ろ", romaji: "ro", word: "ろく (Roku) = Enam", mnemonic: "Angka 3 polos tanpa simpul ekor (RO-ti dimakan buntutnya, tinggal polos)." }
+        ]
+      },
+      {
+        name: "Paket 10: Baris W & N (WA-WO-N)",
+        items: [
+          { kana: "わ", romaji: "wa", word: "わたし (Watashi) = Saya", mnemonic: "Tiang kiri + perut melengkung lebar ke kanan ('WAh perutnya bulat besar!')." },
+          { kana: "を", romaji: "wo", word: "ほんをよむ = Membaca buku", mnemonic: "Seperti orang duduk bersila sedang memegang WOrtel di lututnya." },
+          { kana: "ん", romaji: "n", word: "にほん (Nihon) = Jepang", mnemonic: "Persis huruf latin 'n' kecil yang kaki kanannya sedikit memanjang!" }
+        ]
+      }
+    ];
+
+    const ALL_ITEMS = HIRAGANA_PACKETS.flatMap((p, pIdx) =>
+      p.items.map((item, cIdx) => ({ ...item, pIdx, cIdx }))
+    );
+
+    const STORAGE_KEY = "kana_pintar_progress_v1";
+    let progress = { mastered: {}, bestScores: {} };
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) progress = JSON.parse(saved);
+    } catch (e) {}
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      } catch (e) {}
+    }
+
+    let currentPacketIdx = 0;
+    let currentCharIdx = 0;
+    let showGhost = true;
+    let strokes = [];
+    let isDrawing = false;
+    let currentStroke = [];
+
+    let quizScope = "packet";
+    let quizStreak = 0;
+    let quizCorrect = 0;
+    let quizTotal = 0;
+    let currentQuiz = null;
+    let quizAnswered = false;
+
+    const canvas = document.getElementById("draw-canvas");
+    const ctx = canvas.getContext("2d");
+
+    function getThemeColors() {
+      const style = getComputedStyle(document.documentElement);
+      return {
+        fg: style.getPropertyValue("--fg").trim() || "#0f172a",
+        muted: style.getPropertyValue("--muted").trim() || "#475569",
+        border: style.getPropertyValue("--border").trim() || "#cbd5e1"
+      };
+    }
+
+    function getActiveItem() {
+      return HIRAGANA_PACKETS[currentPacketIdx].items[currentCharIdx];
+    }
+
+    function renderCanvas() {
+      const { fg, muted, border } = getThemeColors();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      ctx.strokeStyle = border;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(100, 8);
+      ctx.lineTo(100, 192);
+      ctx.moveTo(8, 100);
+      ctx.lineTo(192, 100);
+      ctx.stroke();
+      ctx.restore();
+
+      if (showGhost) {
+        const item = getActiveItem();
+        ctx.save();
+        ctx.fillStyle = muted;
+        ctx.globalAlpha = 0.24;
+        ctx.font = '600 135px "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif';
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(item.kana, 100, 104);
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.strokeStyle = fg;
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      for (const stroke of strokes) {
+        if (stroke.length === 0) continue;
+        ctx.beginPath();
+        ctx.moveTo(stroke[0].x, stroke[0].y);
+        if (stroke.length === 1) {
+          ctx.lineTo(stroke[0].x + 0.1, stroke[0].y + 0.1);
+        } else {
+          for (let i = 1; i < stroke.length; i++) {
+            ctx.lineTo(stroke[i].x, stroke[i].y);
+          }
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function getPointerPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: ((e.clientX - rect.left) / rect.width) * canvas.width,
+        y: ((e.clientY - rect.top) / rect.height) * canvas.height
+      };
+    }
+
+    canvas.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      canvas.setPointerCapture(e.pointerId);
+      isDrawing = true;
+      currentStroke = [getPointerPos(e)];
+      strokes.push(currentStroke);
+      renderCanvas();
+    });
+
+    canvas.addEventListener("pointermove", (e) => {
+      if (!isDrawing) return;
+      currentStroke.push(getPointerPos(e));
+      renderCanvas();
+    });
+
+    function endStroke() {
+      if (!isDrawing) return;
+      isDrawing = false;
+      currentStroke = [];
+      renderCanvas();
+    }
+
+    canvas.addEventListener("pointerup", endStroke);
+    canvas.addEventListener("pointercancel", endStroke);
+
+    function createOffscreenMask(drawFn) {
+      const c = document.createElement("canvas");
+      c.width = 200;
+      c.height = 200;
+      const g = c.getContext("2d");
+      drawFn(g);
+      return g.getImageData(0, 0, 200, 200).data;
+    }
+
+    function drawUserStrokesToCtx(g, lineWidth) {
+      g.strokeStyle = "#000";
+      g.lineWidth = lineWidth;
+      g.lineCap = "round";
+      g.lineJoin = "round";
+      for (const stroke of strokes) {
+        if (stroke.length === 0) continue;
+        g.beginPath();
+        g.moveTo(stroke[0].x, stroke[0].y);
+        if (stroke.length === 1) {
+          g.lineTo(stroke[0].x + 0.1, stroke[0].y + 0.1);
+        } else {
+          for (let i = 1; i < stroke.length; i++) {
+            g.lineTo(stroke[i].x, stroke[i].y);
+          }
+        }
+        g.stroke();
+      }
+    }
+
+    function setGradeDisplay(title, desc, tone) {
+      const box = document.getElementById("grade-box");
+      document.getElementById("grade-title").textContent = title;
+      document.getElementById("grade-desc").innerHTML = desc;
+      box.className = "grade-box";
+      if (tone === "S") box.classList.add("tone-S");
+      else if (tone === "A") box.classList.add("tone-A");
+      else if (tone === "B") box.classList.add("tone-B");
+    }
+
+    function evaluateDrawing() {
+      if (strokes.length === 0) {
+        setGradeDisplay("Kanvas Masih Kosong ✍️", "Silakan gambar hurufnya terlebih dahulu di kanvas sebelum dinilai.", "neutral");
+        return;
+      }
+
+      const item = getActiveItem();
+      const fontSpec = '600 135px "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif';
+
+      const coreRef = createOffscreenMask((g) => {
+        g.font = fontSpec;
+        g.textAlign = "center";
+        g.textBaseline = "middle";
+        g.lineJoin = "round";
+        g.lineCap = "round";
+        g.lineWidth = 18;
+        g.strokeStyle = "#000";
+        g.fillStyle = "#000";
+        g.strokeText(item.kana, 100, 104);
+        g.fillText(item.kana, 100, 104);
+      });
+
+      const wideRef = createOffscreenMask((g) => {
+        g.font = fontSpec;
+        g.textAlign = "center";
+        g.textBaseline = "middle";
+        g.lineJoin = "round";
+        g.lineCap = "round";
+        g.lineWidth = 34;
+        g.strokeStyle = "#000";
+        g.fillStyle = "#000";
+        g.strokeText(item.kana, 100, 104);
+        g.fillText(item.kana, 100, 104);
+      });
+
+      const userDilated = createOffscreenMask((g) => drawUserStrokesToCtx(g, 20));
+      const userRaw = createOffscreenMask((g) => drawUserStrokesToCtx(g, 10));
+
+      let coreCount = 0;
+      let coveredCount = 0;
+      let userRawCount = 0;
+      let insideWideCount = 0;
+
+      for (let i = 3; i < coreRef.length; i += 4) {
+        const isCore = coreRef[i] > 80;
+        const isWide = wideRef[i] > 50;
+        const isUserDilated = userDilated[i] > 80;
+        const isUserRaw = userRaw[i] > 80;
+
+        if (isCore) {
+          coreCount++;
+          if (isUserDilated) coveredCount++;
+        }
+        if (isUserRaw) {
+          userRawCount++;
+          if (isWide) insideWideCount++;
+        }
+      }
+
+      if (userRawCount < 35) {
+        setGradeDisplay("Goresan Terlalu Sedikit ↺", "Gambar lebih lengkap ya—ikuti bentuk utuh huruf di kanvas.", "neutral");
+        return;
+      }
+
+      const coverage = coreCount > 0 ? coveredCount / coreCount : 0;
+      const precision = userRawCount > 0 ? insideWideCount / userRawCount : 0;
+
+      const adjCov = Math.min(1, coverage / 0.72);
+      const adjPrec = Math.min(1, precision / 0.94);
+      const harmonic = (adjCov > 0 && adjPrec > 0) ? (2 * adjCov * adjPrec) / (adjCov + adjPrec) : 0;
+      const score = Math.min(99, Math.max(5, Math.round(harmonic * 100)));
+
+      const prevBest = progress.bestScores[item.kana] || 0;
+      if (score > prevBest) progress.bestScores[item.kana] = score;
+
+      if (score >= 85) {
+        progress.mastered[item.kana] = true;
+        saveProgress();
+        setGradeDisplay(
+          `⭐⭐⭐ LEVEL S — ${score}% (Sempurna!)`,
+          `Mantap! Bentuk <strong>${item.kana} (${item.romaji})</strong> sangat akurat. ${showGhost ? "Coba matikan Bayangan untuk tes ingatan!" : "Hebat, kamu lulus tanpa bayangan!"}`,
+          "S"
+        );
+      } else if (score >= 70) {
+        progress.mastered[item.kana] = true;
+        saveProgress();
+        const tip = adjCov < adjPrec
+          ? "Sedikit lagi: lengkapi bagian ujung/ekor goresan."
+          : "Sedikit lagi: perhatikan posisi garis agar tetap di jalur tengah.";
+        setGradeDisplay(`⭐⭐ LEVEL A — ${score}% (Bagus!)`, `Sudah lulus! ${tip}`, "A");
+      } else if (score >= 50) {
+        saveProgress();
+        const diag = adjCov < adjPrec
+          ? "Goresan kurang lengkap, perhatikan bagian tepi atau lengkungan huruf."
+          : "Banyak garis keluar jalur. Perhatikan posisi titik tengah (+) pada kotak.";
+        setGradeDisplay(`⭐ LEVEL B — ${score}% (Hampir Mirip)`, diag, "B");
+      } else {
+        saveProgress();
+        setGradeDisplay(
+          `↺ LEVEL C — ${score}% (Coba Lagi)`,
+          `Nyalakan <strong>Bayangan: ON</strong> dan ingat triknya: <em>${item.mnemonic}</em>`,
+          "neutral"
+        );
+      }
+
+      updateUI();
+    }
+
+    function speakKana(text) {
+      if (!("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "ja-JP";
+        utter.rate = 0.85;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
+
+    function updateUI() {
+      const masteredCount = ALL_ITEMS.filter((it) => progress.mastered[it.kana]).length;
+      document.getElementById("progress-badge").textContent = `${masteredCount} / 46 ★ Dikuasai`;
+      document.getElementById("packet-select").value = String(currentPacketIdx);
+
+      const pillsEl = document.getElementById("char-pills");
+      pillsEl.innerHTML = "";
+      const packetItems = HIRAGANA_PACKETS[currentPacketIdx].items;
+
+      packetItems.forEach((item, idx) => {
+        const isActive = idx === currentCharIdx;
+        const isMastered = Boolean(progress.mastered[item.kana]);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `char-btn${isActive ? " active" : ""}`;
+        btn.textContent = isMastered ? `${item.kana} ★` : item.kana;
+        btn.addEventListener("click", () => selectChar(idx));
+        pillsEl.appendChild(btn);
+      });
+
+      const active = getActiveItem();
+      document.getElementById("info-kana").textContent = active.kana;
+      document.getElementById("info-romaji").textContent = active.romaji;
+      document.getElementById("info-word").textContent = active.word;
+      document.getElementById("info-mnemonic").textContent = active.mnemonic;
+
+      const masterTag = document.getElementById("info-master-tag");
+      if (progress.mastered[active.kana]) masterTag.classList.remove("hidden");
+      else masterTag.classList.add("hidden");
+
+      const best = progress.bestScores[active.kana];
+      document.getElementById("char-best-score").textContent = best ? `Nilai Terbaik: ${best}%` : "Belum dinilai";
+    }
+
+    function selectChar(idx) {
+      currentCharIdx = idx;
+      strokes = [];
+      setGradeDisplay(
+        "Siap Berlatih ✍️",
+        "Ikuti bayangan huruf di kanvas, lalu klik <strong>Nilai</strong>. Kalau sudah ingat, matikan bayangan!",
+        "neutral"
+      );
+      updateUI();
+      renderCanvas();
+    }
+
+    function selectPacket(pIdx) {
+      currentPacketIdx = pIdx;
+      selectChar(0);
+      if (!document.getElementById("panel-quiz").classList.contains("hidden") && quizScope === "packet") {
+        nextQuizQuestion();
+      }
+    }
+
+    const packetSelect = document.getElementById("packet-select");
+    HIRAGANA_PACKETS.forEach((p, idx) => {
+      const opt = document.createElement("option");
+      opt.value = String(idx);
+      opt.textContent = p.name;
+      packetSelect.appendChild(opt);
+    });
+    packetSelect.addEventListener("change", (e) => selectPacket(Number(e.target.value)));
+
+    document.getElementById("btn-audio").addEventListener("click", () => {
+      speakKana(getActiveItem().kana);
+    });
+
+    document.getElementById("btn-ghost").addEventListener("click", () => {
+      showGhost = !showGhost;
+      document.getElementById("btn-ghost").textContent = showGhost ? "👁 Bayangan: ON" : "🙈 Bayangan: OFF";
+      renderCanvas();
+    });
+
+    document.getElementById("btn-clear").addEventListener("click", () => {
+      strokes = [];
+      renderCanvas();
+    });
+
+    document.getElementById("btn-grade").addEventListener("click", evaluateDrawing);
+
+    document.getElementById("btn-prev").addEventListener("click", () => {
+      if (currentCharIdx > 0) {
+        selectChar(currentCharIdx - 1);
+      } else {
+        currentPacketIdx = (currentPacketIdx - 1 + HIRAGANA_PACKETS.length) % HIRAGANA_PACKETS.length;
+        selectChar(HIRAGANA_PACKETS[currentPacketIdx].items.length - 1);
+      }
+    });
+
+    document.getElementById("btn-next").addEventListener("click", () => {
+      const items = HIRAGANA_PACKETS[currentPacketIdx].items;
+      if (currentCharIdx < items.length - 1) {
+        selectChar(currentCharIdx + 1);
+      } else {
+        currentPacketIdx = (currentPacketIdx + 1) % HIRAGANA_PACKETS.length;
+        selectChar(0);
+      }
+    });
+
+    document.getElementById("btn-reset-progress").addEventListener("click", () => {
+      progress = { mastered: {}, bestScores: {} };
+      saveProgress();
+      updateUI();
+      setGradeDisplay("Progres Direset ↺", "Semua progres telah dikembalikan ke 0. Semangat berlatih lagi!", "neutral");
+    });
+
+    const tabDraw = document.getElementById("tab-draw");
+    const tabQuiz = document.getElementById("tab-quiz");
+    const panelDraw = document.getElementById("panel-draw");
+    const panelQuiz = document.getElementById("panel-quiz");
+
+    function switchTab(mode) {
+      if (mode === "draw") {
+        panelDraw.classList.remove("hidden");
+        panelQuiz.classList.add("hidden");
+        tabDraw.className = "btn btn-primary";
+        tabQuiz.className = "btn";
+        renderCanvas();
+      } else {
+        panelQuiz.classList.remove("hidden");
+        panelDraw.classList.add("hidden");
+        tabQuiz.className = "btn btn-primary";
+        tabDraw.className = "btn";
+        if (!currentQuiz) nextQuizQuestion();
+      }
+    }
+
+    tabDraw.addEventListener("click", () => switchTab("draw"));
+    tabQuiz.addEventListener("click", () => switchTab("quiz"));
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function nextQuizQuestion() {
+      quizAnswered = false;
+      const pool = quizScope === "packet"
+        ? HIRAGANA_PACKETS[currentPacketIdx].items
+        : ALL_ITEMS;
+
+      const target = pool[Math.floor(Math.random() * pool.length)];
+      const distractorPool = (pool.length >= 4 ? pool : ALL_ITEMS).filter((it) => it.kana !== target.kana);
+      const distractors = shuffle(distractorPool).slice(0, 3);
+      const options = shuffle([target, ...distractors]);
+      const mode = Math.random() < 0.5 ? "kana-to-romaji" : "romaji-to-kana";
+
+      currentQuiz = { target, options, mode };
+
+      const promptLabel = document.getElementById("quiz-prompt-label");
+      const promptMain = document.getElementById("quiz-prompt-main");
+      const hintBtn = document.getElementById("quiz-hint-btn");
+      const hintText = document.getElementById("quiz-hint-text");
+
+      hintText.classList.add("hidden");
+      hintBtn.classList.remove("hidden");
+
+      if (mode === "kana-to-romaji") {
+        promptLabel.textContent = "Apa bacaan huruf ini?";
+        promptMain.textContent = target.kana;
+        promptMain.style.fontSize = "64px";
+        hintText.textContent = `💡 ${target.mnemonic}`;
+      } else {
+        promptLabel.textContent = "Pilih huruf Hiragana untuk:";
+        promptMain.textContent = `"${target.romaji.toUpperCase()}"`;
+        promptMain.style.fontSize = "40px";
+        hintText.textContent = `💡 ${target.mnemonic}`;
+      }
+
+      const optionsEl = document.getElementById("quiz-options");
+      optionsEl.innerHTML = "";
+      options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "quiz-opt-btn";
+        btn.textContent = mode === "kana-to-romaji" ? opt.romaji.toUpperCase() : opt.kana;
+        btn.addEventListener("click", () => handleQuizAnswer(opt, btn));
+        optionsEl.appendChild(btn);
+      });
+
+      document.getElementById("quiz-feedback-text").textContent = "Pilih satu jawaban yang paling tepat.";
+      document.getElementById("quiz-next-btn").classList.add("hidden");
+    }
+
+    function handleQuizAnswer(selected, btnEl) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      quizTotal++;
+
+      const isCorrect = selected.kana === currentQuiz.target.kana;
+      if (isCorrect) {
+        quizCorrect++;
+        quizStreak++;
+        btnEl.classList.add("correct");
+        btnEl.textContent = `✓ ${btnEl.textContent}`;
+        document.getElementById("quiz-feedback-text").innerHTML =
+          `<strong>✓ Benar!</strong> ${currentQuiz.target.kana} (${currentQuiz.target.romaji}) — ${currentQuiz.target.word}`;
+      } else {
+        quizStreak = 0;
+        btnEl.classList.add("wrong");
+        btnEl.textContent = `✕ ${btnEl.textContent}`;
+        const buttons = document.getElementById("quiz-options").querySelectorAll("button");
+        currentQuiz.options.forEach((opt, idx) => {
+          if (opt.kana === currentQuiz.target.kana) {
+            buttons[idx].classList.add("correct");
+            buttons[idx].textContent = `✓ ${buttons[idx].textContent}`;
+          }
+        });
+        document.getElementById("quiz-feedback-text").innerHTML =
+          `<strong>✕ Kurang tepat.</strong> Jawaban: <strong>${currentQuiz.target.kana} (${currentQuiz.target.romaji})</strong>. Ingat: <em>${currentQuiz.target.mnemonic}</em>`;
+      }
+
+      document.getElementById("quiz-streak").textContent = String(quizStreak);
+      document.getElementById("quiz-score").textContent = `${quizCorrect}/${quizTotal}`;
+      document.getElementById("quiz-next-btn").classList.remove("hidden");
+    }
+
+    document.getElementById("quiz-hint-btn").addEventListener("click", () => {
+      document.getElementById("quiz-hint-text").classList.remove("hidden");
+      document.getElementById("quiz-hint-btn").classList.add("hidden");
+    });
+
+    document.getElementById("quiz-next-btn").addEventListener("click", nextQuizQuestion);
+
+    document.getElementById("quiz-scope-packet").addEventListener("click", () => {
+      quizScope = "packet";
+      document.getElementById("quiz-scope-packet").className = "btn btn-sm btn-primary";
+      document.getElementById("quiz-scope-all").className = "btn btn-sm";
+      nextQuizQuestion();
+    });
+
+    document.getElementById("quiz-scope-all").addEventListener("click", () => {
+      quizScope = "all";
+      document.getElementById("quiz-scope-all").className = "btn btn-sm btn-primary";
+      document.getElementById("quiz-scope-packet").className = "btn btn-sm";
+      nextQuizQuestion();
+    });
+
+    if (window.matchMedia) {
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderCanvas);
+    }
+
+    updateUI();
+    renderCanvas();
+  </script>
+</body>
+</html>
