@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Kana Pintar — Latihan Hiragana Anti-Lupa</title>
+  <title>Kana Pintar — Hiragana, Tenten, Katakana &amp; Target 6 Bulan</title>
   <style>
     :root {
       --bg: #f4f6f9;
@@ -63,7 +63,7 @@
     }
 
     .app-shell {
-      max-width: 880px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
@@ -74,7 +74,7 @@
       justify-content: space-between;
       gap: 12px;
       padding-bottom: 14px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -109,8 +109,30 @@
 
     .tabs-bar {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
+    }
+
+    .mode-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mode-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .mode-hint {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
     }
 
     .btn {
@@ -120,8 +142,8 @@
       gap: 6px;
       font-size: 14px;
       font-weight: 600;
-      padding: 9px 14px;
-      min-height: 40px;
+      padding: 8px 13px;
+      min-height: 38px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--card);
@@ -237,7 +259,7 @@
     }
 
     .romaji-big {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -399,7 +421,7 @@
 
     .quiz-opt-btn {
       padding: 16px 10px;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       border-radius: 12px;
       border: 2px solid var(--border);
@@ -418,6 +440,63 @@
       background: var(--tone-b-bg);
       border-color: var(--tone-b-border);
       color: var(--tone-b-fg);
+    }
+
+    .roadmap-banner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 13px;
+    }
+
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 720px) {
+      .roadmap-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .roadmap-month-title {
+      font-size: 14px;
+      font-weight: 800;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .roadmap-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    .roadmap-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      margin-top: 2px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .roadmap-item span.done {
+      text-decoration: line-through;
+      color: var(--muted);
     }
 
     .hidden {
@@ -441,11 +520,11 @@
   <div class="app-shell">
     <header class="app-header">
       <div>
-        <h1 class="brand-title">🇯🇵 Kana Pintar — Belajar Hiragana dari 0</h1>
-        <p class="brand-sub">Metode Cicil 5 Huruf • Trik Jembatan Keledai • Ramah Buta Warna &amp; Offline</p>
+        <h1 class="brand-title">🇯🇵 Kana Pintar — Target Mahir 6 Bulan</h1>
+        <p class="brand-sub">Hiragana (46) • Tenten &amp; Maru (25) • Katakana (46) • Kuis Gabungan • Roadmap</p>
       </div>
       <div class="header-actions">
-        <span id="progress-badge" class="pill-badge">0 / 46 ★ Dikuasai</span>
+        <span id="progress-badge" class="pill-badge">0/46 ★ • Total 0/117</span>
         <button id="btn-reset-progress" type="button" class="btn btn-sm" title="Ulangi progres dari 0">↺ Reset</button>
       </div>
     </header>
@@ -457,6 +536,18 @@
       <button id="tab-quiz" type="button" role="tab" aria-selected="false" class="btn">
         🧠 Kuis Anti-Lupa
       </button>
+      <button id="tab-roadmap" type="button" role="tab" aria-selected="false" class="btn">
+        📅 Target 6 Bulan
+      </button>
+    </div>
+
+    <div id="script-mode-bar" class="mode-bar">
+      <div class="mode-pills">
+        <button id="mode-hiragana" type="button" class="btn btn-sm btn-primary">あ Hiragana (46)</button>
+        <button id="mode-tenten" type="button" class="btn btn-sm">が Tenten &amp; Maru (25)</button>
+        <button id="mode-katakana" type="button" class="btn btn-sm">ア Katakana (46)</button>
+      </div>
+      <span id="mode-hint" class="mode-hint">Tahap 1: 46 Huruf Dasar</span>
     </div>
 
     <!-- TAB 1: DRAW & GRADE -->
@@ -523,7 +614,7 @@
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
           <button id="quiz-preset-upto" type="button" class="btn btn-sm">Paket 1 s/d Aktif</button>
           <button id="quiz-preset-current" type="button" class="btn btn-sm">Hanya Paket Ini</button>
-          <button id="quiz-preset-all" type="button" class="btn btn-sm">Semua (46 Huruf)</button>
+          <button id="quiz-preset-all" type="button" class="btn btn-sm">Semua Paket</button>
         </div>
         <div style="display:flex; align-items:center; gap:10px; font-size:14px; font-weight:700; flex-wrap:wrap;">
           <span id="quiz-pool-count" class="quiz-pool-badge">10 Huruf aktif</span>
@@ -551,117 +642,376 @@
         </section>
       </div>
     </main>
+
+    <!-- TAB 3: 6-MONTH ROADMAP -->
+    <main id="panel-roadmap" class="hidden">
+      <div class="roadmap-banner">
+        <div style="color:var(--muted);">
+          ⏱️ <strong style="color:var(--fg);">Rumus Harian 20-20-20 Menit:</strong>
+          Pagi <em>Review Gabungan</em> • Siang <em>Materi Baru</em> • Sore <em>Audio/Kuis</em> • Malam <em>100% Keluarga</em>
+        </div>
+        <span id="roadmap-progress" class="pill-badge">0 / 17 Selesai</span>
+      </div>
+      <div id="roadmap-list" class="roadmap-grid"></div>
+    </main>
   </div>
 
   <script>
-    const HIRAGANA_PACKETS = [
+    const SCRIPT_MODES = {
+      hiragana: {
+        label: "Hiragana (46)",
+        hint: "Tahap 1: 46 Huruf Dasar",
+        packets: [
+          {
+            short: "P1 (A-O)",
+            name: "Paket 1: Vokal (A-I-U-E-O)",
+            items: [
+              { kana: "あ", romaji: "a", word: "あめ (Ame) = Hujan", mnemonic: "Seperti huruf 'A' yang dilingkari tali, atau orang berteriak 'A!' karena tertimpa atap." },
+              { kana: "い", romaji: "i", word: "いぬ (Inu) = Anjing", mnemonic: "Dua garis sejajar seperti dua ekor Ikan (I) berenang berdampingan (kiri lebih panjang)." },
+              { kana: "う", romaji: "u", word: "うみ (Umi) = Laut", mnemonic: "Seperti orang menunduk memakai topi melihat Uang (U) jatuh di tanah." },
+              { kana: "え", romaji: "e", word: "えき (Eki) = Stasiun", mnemonic: "Mirip huruf Z bertopi, seperti burung Elang (E) yang sedang terbang miring." },
+              { kana: "お", romaji: "o", word: "おちゃ (Ocha) = Teh", mnemonic: "Mirip 'あ', tapi melingkar ke kanan seperti Orang (O) menendang bola (titik di kanan atas)." }
+            ]
+          },
+          {
+            short: "P2 (KA-KO)",
+            name: "Paket 2: Baris K (KA-KI-KU-KE-KO)",
+            items: [
+              { kana: "か", romaji: "ka", word: "かさ (Kasa) = Payung", mnemonic: "Seperti pisau memotong KAyu atau huruf 'K' bengkok dengan satu titik di kanan." },
+              { kana: "き", romaji: "ki", word: "き (Ki) = Pohon", mnemonic: "Persis seperti Kunci (KI) kuno bergerigi dua di atas dan melengkung di bawah." },
+              { kana: "く", romaji: "ku", word: "くつ (Kutsu) = Sepatu", mnemonic: "Paling mudah diingat: seperti paruh burung KUtilang atau tanda '<'." },
+              { kana: "け", romaji: "ke", word: "けいたい (Keitai) = HP", mnemonic: "Seperti tiang pintu dan palang yang membentuk huruf 'K' tegak (KErangkeng)." },
+              { kana: "こ", romaji: "ko", word: "こども (Kodomo) = Anak", mnemonic: "Dua garis melengkung atas-bawah seperti KOlam ikan atau dua cacing bertumpuk." }
+            ]
+          },
+          {
+            short: "P3 (SA-SO)",
+            name: "Paket 3: Baris S (SA-SHI-SU-SE-SO)",
+            items: [
+              { kana: "さ", romaji: "sa", word: "さかな (Sakana) = Ikan", mnemonic: "Mirip 'き' (kunci), tapi garis datarnya cuma satu (SA-tu ikat pinggang)." },
+              { kana: "し", romaji: "shi", word: "しお (Shio) = Garam", mnemonic: "Seperti mata pancing atau gagang payung terbalik yang mengait SI ikan." },
+              { kana: "す", romaji: "su", word: "すし (Sushi) = Sushi", mnemonic: "Seperti tali berputar membuat simpul melingkar di tengah (SUmpit melingkar)." },
+              { kana: "せ", romaji: "se", word: "せかい (Sekai) = Dunia", mnemonic: "Seperti mulut kotak terbuka yang mengunyah SEmua makanan." },
+              { kana: "そ", romaji: "so", word: "そら (Sora) = Langit", mnemonic: "Zig-zag angka 7 lalu huruf C di bawahnya, seperti jalan tikungan yang harus dilewati SOpan." }
+            ]
+          },
+          {
+            short: "P4 (TA-TO)",
+            name: "Paket 4: Baris T (TA-CHI-TSU-TE-TO)",
+            items: [
+              { kana: "た", romaji: "ta", word: "たまご (Tamago) = Telur", mnemonic: "Terlihat seperti huruf 't' dan 'a' digabung bersebelahan menjadi 'TA'!" },
+              { kana: "ち", romaji: "chi", word: "ちず (Chizu) = Peta", mnemonic: "Persis angka 5 dicoret garis atasnya (ingat angka 5 = CHIli / cabai melengkung)." },
+              { kana: "つ", romaji: "tsu", word: "つき (Tsuki) = Bulan", mnemonic: "Seperti ombak TSUnami besar yang melengkung ke kanan lalu menukik ke bawah." },
+              { kana: "て", romaji: "te", word: "て (Te) = Tangan", mnemonic: "Seperti huruf 'T' yang kakinya melengkung seperti TElinga." },
+              { kana: "と", romaji: "to", word: "とけい (Tokei) = Jam", mnemonic: "Seperti jari kaki atau TOngkat yang tertancap duri kecil di atasnya." }
+            ]
+          },
+          {
+            short: "P5 (NA-NO)",
+            name: "Paket 5: Baris N (NA-NI-NU-NE-NO)",
+            items: [
+              { kana: "な", romaji: "na", word: "なまえ (Namae) = Nama", mnemonic: "Kiri mirip tanda tambah, kanan ada simpul pita kecil di bawah (NAnti diikat)." },
+              { kana: "に", romaji: "ni", word: "にほん (Nihon) = Jepang", mnemonic: "Tiang lurus di kiri + tanda 'こ' di kanan, seperti jarum dan benang (NItis menjahit)." },
+              { kana: "ぬ", romaji: "nu", word: "ぬの (Nuno) = Kain", mnemonic: "Seperti mie melingkar dengan simpul buntut kecil di kanan (NUdle / mie kusut)." },
+              { kana: "ね", romaji: "ne", word: "ねこ (Neko) = Kucing", mnemonic: "Tiang kiri + zig-zag yang berakhir dengan ekor melingkar seperti ekor kucing (NEko)." },
+              { kana: "の", romaji: "no", word: "のみもの (Nomimono) = Minuman", mnemonic: "Satu tarikan melingkar seperti rambu dilarang (NO) atau obat nyamuk bakar." }
+            ]
+          },
+          {
+            short: "P6 (HA-HO)",
+            name: "Paket 6: Baris H (HA-HI-FU-HE-HO)",
+            items: [
+              { kana: "は", romaji: "ha", word: "はな (Hana) = Bunga", mnemonic: "Tiang di kiri + huruf 'H' kecil bersimpul di kanan (HAmpir mirip huruf H!)." },
+              { kana: "ひ", romaji: "hi", word: "ひと (Hito) = Orang", mnemonic: "Seperti mulut lebar orang tertawa 'Hi hi hi!' (atau bentuk sepatu hak tinggi)." },
+              { kana: "ふ", romaji: "fu", word: "ふじさん (Fujisan) = Gunung Fuji", mnemonic: "Seperti Gunung FUji yang puncaknya bertopi awan diapit dua bukit kecil." },
+              { kana: "へ", romaji: "he", word: "へや (Heya) = Kamar", mnemonic: "Seperti atap gunung lancip ke atas, mirip orang mengangkat bahu sambil bilang 'He?'." },
+              { kana: "ほ", romaji: "ho", word: "ほし (Hoshi) = Bintang", mnemonic: "Mirip 'は', bedanya punya 2 garis atap di kanan: ingat 'HO-ho-ho' bertopi ganda!" }
+            ]
+          },
+          {
+            short: "P7 (MA-MO)",
+            name: "Paket 7: Baris M (MA-MI-MU-ME-MO)",
+            items: [
+              { kana: "ま", romaji: "ma", word: "まど (Mado) = Jendela", mnemonic: "Seperti tiang kapal dengan 2 layar di atas dan satu simpul di bawah (MAma melipat layar)." },
+              { kana: "み", romaji: "mi", word: "みず (Mizu) = Air", mnemonic: "Persis gabungan angka 2 dan 1 (ingat: MInum air jam 21)." },
+              { kana: "む", romaji: "mu", word: "むし (Mushi) = Serangga", mnemonic: "Seperti kepala sapi bersuara 'MUUU' (ada tanduk, hidung melingkar, dan titik)." },
+              { kana: "め", romaji: "me", word: "め (Me) = Mata", mnemonic: "Mirip 'ぬ' tapi TANPA simpul ekor; bundar bersih seperti Mata (ME)." },
+              { kana: "も", romaji: "mo", word: "もも (Momo) = Persik", mnemonic: "Seperti kail pancing 'し' dipasang 2 umpan agar dapat ikan MOntok." }
+            ]
+          },
+          {
+            short: "P8 (YA-YO)",
+            name: "Paket 8: Baris Y (YA-YU-YO)",
+            items: [
+              { kana: "や", romaji: "ya", word: "やま (Yama) = Gunung", mnemonic: "Seperti kepala hewan YAk bertanduk dua dan berleher miring." },
+              { kana: "ゆ", romaji: "yu", word: "ゆき (Yuki) = Salju", mnemonic: "Seperti ikan hiU (YU) berenang berputar dalam satu tarikan garis." },
+              { kana: "よ", romaji: "yo", word: "よる (Yoru) = Malam", mnemonic: "Seperti tangan memegang tali mainan YO-yo yang melingkar di bawah." }
+            ]
+          },
+          {
+            short: "P9 (RA-RO)",
+            name: "Paket 9: Baris R (RA-RI-RU-RE-RO)",
+            items: [
+              { kana: "ら", romaji: "ra", word: "らいねん (Rainen) = Tahun depan", mnemonic: "Seperti angka 5 yang topi atasnya terlepas, mirip kursi santai RAja." },
+              { kana: "り", romaji: "ri", word: "りんご (Ringo) = Apel", mnemonic: "Dua garis vertikal sejajar (kanan lebih panjang), seperti dua batang bambu RIndang." },
+              { kana: "る", romaji: "ru", word: "るす (Rusu) = Tidak ada di rumah", mnemonic: "Seperti angka 3 yang ujung bawahnya melingkar menjadi simpul (RU-mah dikunci)." },
+              { kana: "れ", romaji: "re", word: "れいぞうこ (Reizouko) = Kulkas", mnemonic: "Tiang kiri + zig-zag yang ujungnya mencuat ke kanan atas (REm mendadak terpelanting)." },
+              { kana: "ろ", romaji: "ro", word: "ろく (Roku) = Enam", mnemonic: "Angka 3 polos tanpa simpul ekor (RO-ti dimakan buntutnya, tinggal polos)." }
+            ]
+          },
+          {
+            short: "P10 (WA-N)",
+            name: "Paket 10: Baris W & N (WA-WO-N)",
+            items: [
+              { kana: "わ", romaji: "wa", word: "わたし (Watashi) = Saya", mnemonic: "Tiang kiri + perut melengkung lebar ke kanan ('WAh perutnya bulat besar!')." },
+              { kana: "を", romaji: "wo", word: "ほんをよむ = Membaca buku", mnemonic: "Seperti orang duduk bersila sedang memegang WOrtel di lututnya." },
+              { kana: "ん", romaji: "n", word: "にほん (Nihon) = Jepang", mnemonic: "Persis huruf latin 'n' kecil yang kaki kanannya sedikit memanjang!" }
+            ]
+          }
+        ]
+      },
+      tenten: {
+        label: "Tenten & Maru (25)",
+        hint: "Tahap 2: K→G, S→Z, T→D, H→B/P",
+        packets: [
+          {
+            short: "P1 (GA-GO)",
+            name: "Paket 1: Baris G (か + ゛ = GA)",
+            items: [
+              { kana: "が", romaji: "ga", word: "がっこう (Gakkou) = Sekolah", mnemonic: "Huruf 'か (ka)' + tanda petik dua (Tenten ゛) mengubah bunyi K menjadi G." },
+              { kana: "ぎ", romaji: "gi", word: "ぎんこう (Ginkou) = Bank", mnemonic: "Huruf 'き (ki)' + Tenten (゛) mengubah bunyi K menjadi G (GI-gi kunci)." },
+              { kana: "ぐ", romaji: "gu", word: "ぐあい (Guai) = Kondisi", mnemonic: "Huruf 'く (ku)' + Tenten (゛) mengubah bunyi K menjadi G (GU)." },
+              { kana: "げ", romaji: "ge", word: "げんき (Genki) = Sehat", mnemonic: "Huruf 'け (ke)' + Tenten (゛) mengubah bunyi K menjadi G (GE)." },
+              { kana: "ご", romaji: "go", word: "ごはん (Gohan) = Nasi", mnemonic: "Huruf 'こ (ko)' + Tenten (゛) mengubah bunyi K menjadi G (GO-han)." }
+            ]
+          },
+          {
+            short: "P2 (ZA-ZO)",
+            name: "Paket 2: Baris Z (さ + ゛ = ZA)",
+            items: [
+              { kana: "ざ", romaji: "za", word: "ざっし (Zasshi) = Majalah", mnemonic: "Huruf 'さ (sa)' + Tenten (゛) mengubah bunyi S menjadi Z." },
+              { kana: "じ", romaji: "ji", word: "じかん (Jikan) = Waktu", mnemonic: "Huruf 'し (shi)' + Tenten (゛) dibaca JI (bukan zi!). Ingat: Jam / JI-kan." },
+              { kana: "ず", romaji: "zu", word: "ちず (Chizu) = Peta", mnemonic: "Huruf 'す (su)' + Tenten (゛) mengubah S menjadi Z (ZU)." },
+              { kana: "ぜ", romaji: "ze", word: "ぜんぶ (Zenbu) = Semua", mnemonic: "Huruf 'せ (se)' + Tenten (゛) mengubah S menjadi Z (ZE)." },
+              { kana: "ぞ", romaji: "zo", word: "どうぞ (Douzo) = Silakan", mnemonic: "Huruf 'そ (so)' + Tenten (゛) mengubah S menjadi Z (ZO)." }
+            ]
+          },
+          {
+            short: "P3 (DA-DO)",
+            name: "Paket 3: Baris D (た + ゛ = DA)",
+            items: [
+              { kana: "だ", romaji: "da", word: "だれ (Dare) = Siapa", mnemonic: "Huruf 'た (ta)' + Tenten (゛) mengubah bunyi T menjadi D." },
+              { kana: "ぢ", romaji: "ji / di", word: "はなぢ (Hanaji) = Mimisan", mnemonic: "Huruf 'ち (chi)' + Tenten (゛) dibaca JI (jarang muncul, dipakai di kata gabungan)." },
+              { kana: "づ", romaji: "zu / du", word: "つづく (Tsuzuku) = Berlanjut", mnemonic: "Huruf 'つ (tsu)' + Tenten (゛) dibaca ZU (dipakai di kata gabungan)." },
+              { kana: "で", romaji: "de", word: "でんしゃ (Densha) = Kereta", mnemonic: "Huruf 'て (te)' + Tenten (゛) mengubah T menjadi D (DE)." },
+              { kana: "ど", romaji: "do", word: "どこ (Doko) = Di mana", mnemonic: "Huruf 'と (to)' + Tenten (゛) mengubah T menjadi D (DO)." }
+            ]
+          },
+          {
+            short: "P4 (BA-BO)",
+            name: "Paket 4: Baris B (は + ゛ = BA)",
+            items: [
+              { kana: "ば", romaji: "ba", word: "ばしょ (Basho) = Tempat", mnemonic: "Huruf 'は (ha)' + Tenten (゛) mengubah bunyi H menjadi B." },
+              { kana: "び", romaji: "bi", word: "びょういん (Byouin) = RS", mnemonic: "Huruf 'ひ (hi)' + Tenten (゛) mengubah bunyi H menjadi B (BI)." },
+              { kana: "ぶ", romaji: "bu", word: "ぶた (Buta) = Babi", mnemonic: "Huruf 'ふ (fu)' + Tenten (゛) mengubah F/H menjadi B (BU)." },
+              { kana: "べ", romaji: "be", word: "べんきょう (Benkyou) = Belajar", mnemonic: "Huruf 'へ (he)' + Tenten (゛) mengubah H menjadi B (BE)." },
+              { kana: "ぼ", romaji: "bo", word: "ぼうし (Boushi) = Topi", mnemonic: "Huruf 'ほ (ho)' + Tenten (゛) mengubah H menjadi B (BO)." }
+            ]
+          },
+          {
+            short: "P5 (PA-PO)",
+            name: "Paket 5: Baris P / Maru (は + ゜ = PA)",
+            items: [
+              { kana: "ぱ", romaji: "pa", word: "ぱん (Pan) = Roti", mnemonic: "Huruf 'は (ha)' + bulat kecil (Maru ゜) mengubah bunyi H menjadi P (PA)." },
+              { kana: "ぴ", romaji: "pi", word: "えんぴつ (Enpitsu) = Pensil", mnemonic: "Huruf 'ひ (hi)' + Maru (゜) mengubah H menjadi P (PI)." },
+              { kana: "ぷ", romaji: "pu", word: "てんぷら (Tenpura) = Tempura", mnemonic: "Huruf 'ふ (fu)' + Maru (゜) mengubah F menjadi P (PU)." },
+              { kana: "ぺ", romaji: "pe", word: "ぺこぺこ (Pekopeko) = Lapar", mnemonic: "Huruf 'へ (he)' + Maru (゜) mengubah H menjadi P (PE)." },
+              { kana: "ぽ", romaji: "po", word: "さんぽ (Sanpo) = Jalan santai", mnemonic: "Huruf 'ほ (ho)' + Maru (゜) mengubah H menjadi P (PO)." }
+            ]
+          }
+        ]
+      },
+      katakana: {
+        label: "Katakana (46)",
+        hint: "Tahap 3: Kata Serapan Asing",
+        packets: [
+          {
+            short: "P1 (A-O)",
+            name: "Paket 1: Vokal Katakana (A-I-U-E-O)",
+            items: [
+              { kana: "ア", romaji: "a", word: "アイス (Aisu) = Es krim", mnemonic: "Seperti kepala kapak tajam atau huruf 'A' miring ke kiri." },
+              { kana: "イ", romaji: "i", word: "インドネシア = Indonesia", mnemonic: "Seperti huruf 'I' tegak yang memakai topi miring di atas." },
+              { kana: "ウ", romaji: "u", word: "ウイルス (Uirusu) = Virus", mnemonic: "Versi kotak-kotak dari Hiragana 'う' (U): atap dengan 1 garis pendek di atas." },
+              { kana: "エ", romaji: "e", word: "エアコン (Eakon) = AC", mnemonic: "Persis seperti huruf kapital 'I' besar atau palang Elevator (E)." },
+              { kana: "オ", romaji: "o", word: "オレンジ (Orenji) = Jeruk", mnemonic: "Seperti orang berdiri berbentuk tanda tambah yang menendang ke kiri (O)." }
+            ]
+          },
+          {
+            short: "P2 (KA-KO)",
+            name: "Paket 2: Baris K Katakana (KA-KO)",
+            items: [
+              { kana: "カ", romaji: "ka", word: "カメラ (Kamera) = Kamera", mnemonic: "Persis Hiragana 'か' (ka), bedanya lebih kaku dan tanpa titik di kanan!" },
+              { kana: "キ", romaji: "ki", word: "キロ (Kiro) = Kilo", mnemonic: "Persis bagian atas Hiragana 'き' (KI): kunci bergerigi dua." },
+              { kana: "ク", romaji: "ku", word: "クラス (Kurasu) = Kelas", mnemonic: "Seperti angka 7 yang punya garis pendek di sisi kiri atas (KU)." },
+              { kana: "ケ", romaji: "ke", word: "ケーキ (Keeki) = Kue", mnemonic: "Seperti huruf 'K' miring ke kiri (KE-k / kue)." },
+              { kana: "コ", romaji: "ko", word: "コーヒー (Koohii) = Kopi", mnemonic: "Seperti KOtak terbuka ke kiri (atau kurung siku tutup ']')." }
+            ]
+          },
+          {
+            short: "P3 (SA-SO)",
+            name: "Paket 3: Baris S Katakana (SA-SO)",
+            items: [
+              { kana: "サ", romaji: "sa", word: "サラダ (Sarada) = Salad", mnemonic: "Seperti pagar dua tiang dengan garis kanan melengkung ke bawah (SA-yur)." },
+              { kana: "シ", romaji: "shi", word: "シャツ (Shatsu) = Kemeja", mnemonic: "Beda dengan ツ! 'シ' punya 2 titik bertumpuk ATAS-BAWAH & garis naik ke atas seperti senyum (SHI)." },
+              { kana: "ス", romaji: "su", word: "スーパー (Suupaa) = Supermarket", mnemonic: "Seperti orang berselancar (SUrfing) atau berlari cepat menyilangkan kaki." },
+              { kana: "セ", romaji: "se", word: "セーター (Seetaa) = Sweter", mnemonic: "Versi siku tajam dari Hiragana 'せ' (SE) — bentuknya hampir sama!" },
+              { kana: "ソ", romaji: "so", word: "ソース (Soosu) = Saus", mnemonic: "Beda dengan ン! 'ソ' titiknya lebih tegak dan garisnya turun dari ATAS ke BAWAH (SOs dituang)." }
+            ]
+          },
+          {
+            short: "P4 (TA-TO)",
+            name: "Paket 4: Baris T Katakana (TA-TO)",
+            items: [
+              { kana: "タ", romaji: "ta", word: "タクシー (Takushii) = Taksi", mnemonic: "Mirip 'ク' (ku) tapi punya garis kecil menyilang di tengah (TA)." },
+              { kana: "チ", romaji: "chi", word: "チーズ (Chiizu) = Keju", mnemonic: "Seperti topi caping dengan palang salib dan kaki melengkung ke kiri (CHI)." },
+              { kana: "ツ", romaji: "tsu", word: "ツアー (Tsuaa) = Tur", mnemonic: "Beda dengan シ! 'ツ' punya 2 titik berjajar KIRI-KANAN & garis turun dari atas (ombak TSU-nami)." },
+              { kana: "テ", romaji: "te", word: "テスト (Tesuto) = Tes", mnemonic: "Seperti tiang huruf 'T' dengan dua garis datar bertingkat di atas (TEs)." },
+              { kana: "ト", romaji: "to", word: "トイレ (Toire) = Toilet", mnemonic: "Seperti tiang TOtem bercabang ke kanan (kebalikan Hiragana 'と')." }
+            ]
+          },
+          {
+            short: "P5 (NA-NO)",
+            name: "Paket 5: Baris N Katakana (NA-NO)",
+            items: [
+              { kana: "ナ", romaji: "na", word: "ナイフ (Naifu) = Pisau", mnemonic: "Tanda tambah '+' yang tiangnya melengkung halus ke kiri bawah (NA)." },
+              { kana: "ニ", romaji: "ni", word: "ニュース (Nyuusu) = Berita", mnemonic: "Dua garis datar sejajar persis angka 2 (dalam bahasa Jepang 2 dibaca NI!)." },
+              { kana: "ヌ", romaji: "nu", word: "ヌードル (Nuudoru) = Mi", mnemonic: "Seperti 'ス' (su) yang garis miringnya tembus menyilang ke kiri (NU-dle)." },
+              { kana: "ネ", romaji: "ne", word: "ネクタイ (Nekutai) = Dasi", mnemonic: "Seperti tiang penunjuk arah rapi dengan 4 garis teratur (NE)." },
+              { kana: "ノ", romaji: "no", word: "ノート (Nooto) = Catatan", mnemonic: "Satu garis miring tunggal seperti tanda potong 'NO'." }
+            ]
+          },
+          {
+            short: "P6 (HA-HO)",
+            name: "Paket 6: Baris H Katakana (HA-HO)",
+            items: [
+              { kana: "ハ", romaji: "ha", word: "ハンバーガー = Burger", mnemonic: "Dua garis terpisah seperti huruf 'A' tanpa palang tengah (HA)." },
+              { kana: "ヒ", romaji: "hi", word: "ヒント (Hinto) = Petunjuk", mnemonic: "Seperti huruf 'H' setengah jadi dengan palang miring ke atas (HI)." },
+              { kana: "フ", romaji: "fu", word: "フォーク (Fooku) = Garpu", mnemonic: "Satu tarikan siku tajam seperti angka 7 (FU-jisan miring)." },
+              { kana: "ヘ", romaji: "he", word: "ヘルメット (Herumetto) = Helm", mnemonic: "Paling gampang: bentuknya SAMA PERSIS dengan Hiragana 'へ' (HE)!" },
+              { kana: "ホ", romaji: "ho", word: "ホテル (Hoteru) = Hotel", mnemonic: "Seperti tiang salib bertitik dua di kaki kiri-kanan (HO-tel)." }
+            ]
+          },
+          {
+            short: "P7 (MA-MO)",
+            name: "Paket 7: Baris M Katakana (MA-MO)",
+            items: [
+              { kana: "マ", romaji: "ma", word: "マスク (Masuku) = Masker", mnemonic: "Seperti segitiga siku terbalik menyentuh garis pendek di bawah (MA)." },
+              { kana: "ミ", romaji: "mi", word: "ミルク (Miruku) = Susu", mnemonic: "Tiga garis miring bertumpuk rapi seperti cakaran kucing (MI-au)." },
+              { kana: "ム", romaji: "mu", word: "ゲーム (Geemu) = Game", mnemonic: "Bentuk segitiga terbuka dari hidung sapi 'む' (MU)." },
+              { kana: "メ", romaji: "me", word: "メモ (Memo) = Catatan", mnemonic: "Seperti tanda silang 'X' yang salah satu garisnya lebih panjang (ME)." },
+              { kana: "モ", romaji: "mo", word: "モニター (Monitaa) = Monitor", mnemonic: "Versi kotak dari Hiragana 'も' (MO): dua garis datar dan satu tiang siku." }
+            ]
+          },
+          {
+            short: "P8 (YA-YO)",
+            name: "Paket 8: Baris Y Katakana (YA-YO)",
+            items: [
+              { kana: "ヤ", romaji: "ya", word: "タイヤ (Taiya) = Ban", mnemonic: "Versi tajam dari Hiragana 'や' (YA) tanpa titik kecil di kanan." },
+              { kana: "ユ", romaji: "yu", word: "ユニフォーム = Seragam", mnemonic: "Huruf kotak siku di atas garis datar panjang (YU)." },
+              { kana: "ヨ", romaji: "yo", word: "ヨーロッパ (Yooroppa) = Eropa", mnemonic: "Persis huruf kapital 'E' yang menghadap terbalik ke kiri (YO)." }
+            ]
+          },
+          {
+            short: "P9 (RA-RO)",
+            name: "Paket 9: Baris R Katakana (RA-RO)",
+            items: [
+              { kana: "ラ", romaji: "ra", word: "ラジオ (Rajio) = Radio", mnemonic: "Seperti 'フ' (fu) yang diberi garis topi datar di atasnya (RA-dio)." },
+              { kana: "リ", romaji: "ri", word: "リスト (Risuto) = Daftar", mnemonic: "Dua garis tegak sejajar persis seperti Hiragana 'り' (RI)." },
+              { kana: "ル", romaji: "ru", word: "ルール (Ruuru) = Aturan", mnemonic: "Dua garis kaki terbuka seperti orang melangkah (RU)." },
+              { kana: "レ", romaji: "re", word: "レストラン = Restoran", mnemonic: "Satu garis turun lalu mencuat tajam ke kanan atas seperti tanda centang (RE)." },
+              { kana: "ロ", romaji: "ro", word: "ロボット (Robotto) = Robot", mnemonic: "Kotak persegi sempurna persis kepala RO-bot!" }
+            ]
+          },
+          {
+            short: "P10 (WA-N)",
+            name: "Paket 10: Baris W & N Katakana (WA-N)",
+            items: [
+              { kana: "ワ", romaji: "wa", word: "ワイン (Wain) = Anggur", mnemonic: "Seperti gelas ukur atau bentuk 'ウ' (u) tanpa titik di atas (WA)." },
+              { kana: "ヲ", romaji: "wo", word: "ヲ (Wo)", mnemonic: "Seperti huruf 'コ' dengan garis tengah miring ke bawah (WO)." },
+              { kana: "ン", romaji: "n", word: "パン (Pan) = Roti", mnemonic: "Beda dengan ソ! 'ン' punya 1 titik mendatar & garis NAIK dari bawah ke atas (mirip huruf 'n')." }
+            ]
+          }
+        ]
+      }
+    };
+
+    const ROADMAP_MONTHS = [
       {
-        name: "Paket 1: Vokal (A-I-U-E-O)",
+        month: "Bulan 1: Pondasi Huruf & Angka",
         items: [
-          { kana: "あ", romaji: "a", word: "あめ (Ame) = Hujan", mnemonic: "Seperti huruf 'A' yang dilingkari tali, atau orang berteriak 'A!' karena tertimpa atap." },
-          { kana: "い", romaji: "i", word: "いぬ (Inu) = Anjing", mnemonic: "Dua garis sejajar seperti dua ekor Ikan (I) berenang berdampingan (kiri lebih panjang)." },
-          { kana: "う", romaji: "u", word: "うみ (Umi) = Laut", mnemonic: "Seperti orang menunduk memakai topi melihat Uang (U) jatuh di tanah." },
-          { kana: "え", romaji: "e", word: "えき (Eki) = Stasiun", mnemonic: "Mirip huruf Z bertopi, seperti burung Elang (E) yang sedang terbang miring." },
-          { kana: "お", romaji: "o", word: "おちゃ (Ocha) = Teh", mnemonic: "Mirip 'あ', tapi melingkar ke kanan seperti Orang (O) menendang bola (titik di kanan atas)." }
+          { id: "b1_hira", text: "Hafal 46 Hiragana (Paket 1–10) + skor kuis ≥ 90%" },
+          { id: "b1_ten", text: "Kuasai 25 Tenten & Maru + huruf gabungan (kya/shu/cho)" },
+          { id: "b1_kata", text: "Hafal 46 Katakana (kata serapan asing)" },
+          { id: "b1_num", text: "Hafal angka 1–10.000, jam, hari, tanggal & salam dasar" }
         ]
       },
       {
-        name: "Paket 2: Baris K (KA-KI-KU-KE-KO)",
+        month: "Bulan 2: Irodori Pemula (A1) + 50 Kanji",
         items: [
-          { kana: "か", romaji: "ka", word: "かさ (Kasa) = Payung", mnemonic: "Seperti pisau memotong KAyu atau huruf 'K' bengkok dengan satu titik di kanan." },
-          { kana: "き", romaji: "ki", word: "き (Ki) = Pohon", mnemonic: "Persis seperti Kunci (KI) kuno bergerigi dua di atas dan melengkung di bawah." },
-          { kana: "く", romaji: "ku", word: "くつ (Kutsu) = Sepatu", mnemonic: "Paling mudah diingat: seperti paruh burung KUtilang atau tanda '<'." },
-          { kana: "け", romaji: "ke", word: "けいたい (Keitai) = HP", mnemonic: "Seperti tiang pintu dan palang yang membentuk huruf 'K' tegak (KErangkeng)." },
-          { kana: "こ", romaji: "ko", word: "こども (Kodomo) = Anak", mnemonic: "Dua garis melengkung atas-bawah seperti KOlam ikan atau dua cacing bertumpuk." }
+          { id: "b2_a1a", text: "Irodori A1 Bab 1–9 (perkenalan diri, makanan, memesan)" },
+          { id: "b2_a1b", text: "Irodori A1 Bab 10–18 (arah jalan, transportasi, belanja)" },
+          { id: "b2_kanji", text: "Kenali bentuk & arti 50 Kanji dasar (tanpa wajib tulis)" }
         ]
       },
       {
-        name: "Paket 3: Baris S (SA-SHI-SU-SE-SO)",
+        month: "Bulan 3: Irodori Dasar 1 (A2-1) + 80 Kanji",
         items: [
-          { kana: "さ", romaji: "sa", word: "さかな (Sakana) = Ikan", mnemonic: "Mirip 'き' (kunci), tapi garis datarnya cuma satu (SA-tu ikat pinggang)." },
-          { kana: "し", romaji: "shi", word: "しお (Shio) = Garam", mnemonic: "Seperti mata pancing atau gagang payung terbalik yang mengait SI ikan." },
-          { kana: "す", romaji: "su", word: "すし (Sushi) = Sushi", mnemonic: "Seperti tali berputar membuat simpul melingkar di tengah (SUmpit melingkar)." },
-          { kana: "せ", romaji: "se", word: "せかい (Sekai) = Dunia", mnemonic: "Seperti mulut kotak terbuka yang mengunyah SEmua makanan." },
-          { kana: "そ", romaji: "so", word: "そら (Sora) = Langit", mnemonic: "Zig-zag angka 7 lalu huruf C di bawahnya, seperti jalan tikungan yang harus dilewati SOpan." }
+          { id: "b3_a21a", text: "Irodori A2-1 Bab 1–9 (percakapan kerja, izin, cuaca)" },
+          { id: "b3_a21b", text: "Irodori A2-1 Bab 10–18 (dokter, aturan asrama & sampah)" },
+          { id: "b3_kanji", text: "Tambah +80 Kanji harian (Total dikuasai: 130 Kanji)" }
         ]
       },
       {
-        name: "Paket 4: Baris T (TA-CHI-TSU-TE-TO)",
+        month: "Bulan 4: Irodori Dasar 2 (A2-2) + 90 Kanji",
         items: [
-          { kana: "た", romaji: "ta", word: "たまご (Tamago) = Telur", mnemonic: "Terlihat seperti huruf 't' dan 'a' digabung bersebelahan menjadi 'TA'!" },
-          { kana: "ち", romaji: "chi", word: "ちず (Chizu) = Peta", mnemonic: "Persis angka 5 dicoret garis atasnya (ingat angka 5 = CHIli / cabai melengkung)." },
-          { kana: "つ", romaji: "tsu", word: "つき (Tsuki) = Bulan", mnemonic: "Seperti ombak TSUnami besar yang melengkung ke kanan lalu menukik ke bawah." },
-          { kana: "て", romaji: "te", word: "て (Te) = Tangan", mnemonic: "Seperti huruf 'T' yang kakinya melengkung seperti TElinga." },
-          { kana: "と", romaji: "to", word: "とけい (Tokei) = Jam", mnemonic: "Seperti jari kaki atau TOngkat yang tertancap duri kecil di atasnya." }
+          { id: "b4_a22a", text: "Irodori A2-2 Bab 1–9 (instruksi atasan, lapor masalah)" },
+          { id: "b4_a22b", text: "Irodori A2-2 Bab 10–18 (ungkapan sopan kerja & darurat)" },
+          { id: "b4_kanji", text: "Tambah +90 Kanji A2 (Total: 220 Kanji level JFT-Basic)" }
         ]
       },
       {
-        name: "Paket 5: Baris N (NA-NI-NU-NE-NO)",
+        month: "Bulan 5: Modul Skill SSW & Simulasi JFT",
         items: [
-          { kana: "な", romaji: "na", word: "なまえ (Namae) = Nama", mnemonic: "Kiri mirip tanda tambah, kanan ada simpul pita kecil di bawah (NAnti diikat)." },
-          { kana: "に", romaji: "ni", word: "にほん (Nihon) = Jepang", mnemonic: "Tiang lurus di kiri + tanda 'こ' di kanan, seperti jarum dan benang (NItis menjahit)." },
-          { kana: "ぬ", romaji: "nu", word: "ぬの (Nuno) = Kain", mnemonic: "Seperti mie melingkar dengan simpul buntut kecil di kanan (NUdle / mie kusut)." },
-          { kana: "ね", romaji: "ne", word: "ねこ (Neko) = Kucing", mnemonic: "Tiang kiri + zig-zag yang berakhir dengan ekor melingkar seperti ekor kucing (NEko)." },
-          { kana: "の", romaji: "no", word: "のみもの (Nomimono) = Minuman", mnemonic: "Satu tarikan melingkar seperti rambu dilarang (NO) atau obat nyamuk bakar." }
+          { id: "b5_ssw", text: "Pelajari PDF Modul Resmi SSW (B. Indonesia) bidang pilihan" },
+          { id: "b5_sim", text: "Simulasi JFT-Basic A2 rutin sampai stabil skor 200+ / 250" }
         ]
       },
       {
-        name: "Paket 6: Baris H (HA-HI-FU-HE-HO)",
+        month: "Bulan 6: Ujian Resmi & Wawancara Kerja",
         items: [
-          { kana: "は", romaji: "ha", word: "はな (Hana) = Bunga", mnemonic: "Tiang di kiri + huruf 'H' kecil bersimpul di kanan (HAmpir mirip huruf H!)." },
-          { kana: "ひ", romaji: "hi", word: "ひと (Hito) = Orang", mnemonic: "Seperti mulut lebar orang tertawa 'Hi hi hi!' (atau bentuk sepatu hak tinggi)." },
-          { kana: "ふ", romaji: "fu", word: "ふじさん (Fujisan) = Gunung Fuji", mnemonic: "Seperti Gunung FUji yang puncaknya bertopi awan diapit dua bukit kecil." },
-          { kana: "へ", romaji: "he", word: "へや (Heya) = Kamar", mnemonic: "Seperti atap gunung lancip ke atas, mirip orang mengangkat bahu sambil bilang 'He?'." },
-          { kana: "ほ", romaji: "ho", word: "ほし (Hoshi) = Bintang", mnemonic: "Mirip 'は', bedanya punya 2 garis atap di kanan: ingat 'HO-ho-ho' bertopi ganda!" }
-        ]
-      },
-      {
-        name: "Paket 7: Baris M (MA-MI-MU-ME-MO)",
-        items: [
-          { kana: "ま", romaji: "ma", word: "まど (Mado) = Jendela", mnemonic: "Seperti tiang kapal dengan 2 layar di atas dan satu simpul di bawah (MAma melipat layar)." },
-          { kana: "み", romaji: "mi", word: "みず (Mizu) = Air", mnemonic: "Persis gabungan angka 2 dan 1 (ingat: MInum air jam 21)." },
-          { kana: "む", romaji: "mu", word: "むし (Mushi) = Serangga", mnemonic: "Seperti kepala sapi bersuara 'MUUU' (ada tanduk, hidung melingkar, dan titik)." },
-          { kana: "め", romaji: "me", word: "め (Me) = Mata", mnemonic: "Mirip 'ぬ' tapi TANPA simpul ekor; bundar bersih seperti Mata (ME)." },
-          { kana: "も", romaji: "mo", word: "もも (Momo) = Persik", mnemonic: "Seperti kail pancing 'し' dipasang 2 umpan agar dapat ikan MOntok." }
-        ]
-      },
-      {
-        name: "Paket 8: Baris Y (YA-YU-YO)",
-        items: [
-          { kana: "や", romaji: "ya", word: "やま (Yama) = Gunung", mnemonic: "Seperti kepala hewan YAk bertanduk dua dan berleher miring." },
-          { kana: "ゆ", romaji: "yu", word: "ゆき (Yuki) = Salju", mnemonic: "Seperti ikan hiU (YU) berenang berputar dalam satu tarikan garis." },
-          { kana: "よ", romaji: "yo", word: "よる (Yoru) = Malam", mnemonic: "Seperti tangan memegang tali mainan YO-yo yang melingkar di bawah." }
-        ]
-      },
-      {
-        name: "Paket 9: Baris R (RA-RI-RU-RE-RO)",
-        items: [
-          { kana: "ら", romaji: "ra", word: "らいねん (Rainen) = Tahun depan", mnemonic: "Seperti angka 5 yang topi atasnya terlepas, mirip kursi santai RAja." },
-          { kana: "り", romaji: "ri", word: "りんご (Ringo) = Apel", mnemonic: "Dua garis vertikal sejajar (kanan lebih panjang), seperti dua batang bambu RIndang." },
-          { kana: "る", romaji: "ru", word: "るす (Rusu) = Tidak ada di rumah", mnemonic: "Seperti angka 3 yang ujung bawahnya melingkar menjadi simpul (RU-mah dikunci)." },
-          { kana: "れ", romaji: "re", word: "れいぞうこ (Reizouko) = Kulkas", mnemonic: "Tiang kiri + zig-zag yang ujungnya mencuat ke kanan atas (REm mendadak terpelanting)." },
-          { kana: "ろ", romaji: "ro", word: "ろく (Roku) = Enam", mnemonic: "Angka 3 polos tanpa simpul ekor (RO-ti dimakan buntutnya, tinggal polos)." }
-        ]
-      },
-      {
-        name: "Paket 10: Baris W & N (WA-WO-N)",
-        items: [
-          { kana: "わ", romaji: "wa", word: "わたし (Watashi) = Saya", mnemonic: "Tiang kiri + perut melengkung lebar ke kanan ('WAh perutnya bulat besar!')." },
-          { kana: "を", romaji: "wo", word: "ほんをよむ = Membaca buku", mnemonic: "Seperti orang duduk bersila sedang memegang WOrtel di lututnya." },
-          { kana: "ん", romaji: "n", word: "にほん (Nihon) = Jepang", mnemonic: "Persis huruf latin 'n' kecil yang kaki kanannya sedikit memanjang!" }
+          { id: "b6_exam", text: "Lulus Ujian JFT-Basic A2 & Skill SSW di Prometric" },
+          { id: "b6_mensetsu", text: "Latihan wawancara (Mensetsu) & lamar via TSK/P3MI" }
         ]
       }
     ];
 
-    const ALL_ITEMS = HIRAGANA_PACKETS.flatMap((p, pIdx) =>
-      p.items.map((item, cIdx) => ({ ...item, pIdx, cIdx }))
+    const ALL_MODES_ITEMS = Object.values(SCRIPT_MODES).flatMap((m) =>
+      m.packets.flatMap((p) => p.items)
     );
+    const TOTAL_ROADMAP_ITEMS = ROADMAP_MONTHS.reduce((sum, m) => sum + m.items.length, 0);
 
     const STORAGE_KEY = "kana_pintar_progress_v1";
-    let progress = { mastered: {}, bestScores: {} };
+    let progress = { mastered: {}, bestScores: {}, roadmapChecked: {} };
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) progress = JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        progress = {
+          mastered: parsed.mastered || {},
+          bestScores: parsed.bestScores || {},
+          roadmapChecked: parsed.roadmapChecked || {}
+        };
+      }
     } catch (e) {}
 
     function saveProgress() {
@@ -670,18 +1020,19 @@
       } catch (e) {}
     }
 
-    let currentPacketIdx = 0;
-    let currentCharIdx = 0;
+    let activeTab = "draw";
+    let activeScript = "hiragana";
+    const scriptState = {
+      hiragana: { packetIdx: 0, charIdx: 0, quizPackets: new Set([0, 1]) },
+      tenten: { packetIdx: 0, charIdx: 0, quizPackets: new Set([0, 1]) },
+      katakana: { packetIdx: 0, charIdx: 0, quizPackets: new Set([0, 1]) }
+    };
+
     let showGhost = true;
     let strokes = [];
     let isDrawing = false;
     let currentStroke = [];
 
-    const QUIZ_SHORT_LABELS = [
-      "P1 (A-O)", "P2 (KA-KO)", "P3 (SA-SO)", "P4 (TA-TO)", "P5 (NA-NO)",
-      "P6 (HA-HO)", "P7 (MA-MO)", "P8 (YA-YO)", "P9 (RA-RO)", "P10 (WA-N)"
-    ];
-    let selectedQuizPackets = new Set([0, 1]);
     let quizStreak = 0;
     let quizCorrect = 0;
     let quizTotal = 0;
@@ -691,6 +1042,19 @@
     const canvas = document.getElementById("draw-canvas");
     const ctx = canvas.getContext("2d");
 
+    function getCurrentPackets() {
+      return SCRIPT_MODES[activeScript].packets;
+    }
+
+    function getCurrentState() {
+      return scriptState[activeScript];
+    }
+
+    function getActiveItem() {
+      const st = getCurrentState();
+      return getCurrentPackets()[st.packetIdx].items[st.charIdx];
+    }
+
     function getThemeColors() {
       const style = getComputedStyle(document.documentElement);
       return {
@@ -698,10 +1062,6 @@
         muted: style.getPropertyValue("--muted").trim() || "#475569",
         border: style.getPropertyValue("--border").trim() || "#cbd5e1"
       };
-    }
-
-    function getActiveItem() {
-      return HIRAGANA_PACKETS[currentPacketIdx].items[currentCharIdx];
     }
 
     function renderCanvas() {
@@ -944,17 +1304,43 @@
       } catch (e) {}
     }
 
-    function updateUI() {
-      const masteredCount = ALL_ITEMS.filter((it) => progress.mastered[it.kana]).length;
-      document.getElementById("progress-badge").textContent = `${masteredCount} / 46 ★ Dikuasai`;
-      document.getElementById("packet-select").value = String(currentPacketIdx);
+    function populatePacketDropdown() {
+      const packetSelect = document.getElementById("packet-select");
+      packetSelect.innerHTML = "";
+      getCurrentPackets().forEach((p, idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        opt.textContent = p.name;
+        packetSelect.appendChild(opt);
+      });
+      packetSelect.value = String(getCurrentState().packetIdx);
+    }
 
+    function updateScriptModeButtons() {
+      ["hiragana", "tenten", "katakana"].forEach((key) => {
+        const btn = document.getElementById(`mode-${key}`);
+        btn.className = key === activeScript ? "btn btn-sm btn-primary" : "btn btn-sm";
+      });
+      document.getElementById("mode-hint").textContent = SCRIPT_MODES[activeScript].hint;
+    }
+
+    function updateUI() {
+      const modeItems = getCurrentPackets().flatMap((p) => p.items);
+      const modeMastered = modeItems.filter((it) => progress.mastered[it.kana]).length;
+      const totalMastered = ALL_MODES_ITEMS.filter((it) => progress.mastered[it.kana]).length;
+      document.getElementById("progress-badge").textContent =
+        `${modeMastered}/${modeItems.length} ★ • Total ${totalMastered}/${ALL_MODES_ITEMS.length}`;
+
+      updateScriptModeButtons();
+      populatePacketDropdown();
+
+      const st = getCurrentState();
       const pillsEl = document.getElementById("char-pills");
       pillsEl.innerHTML = "";
-      const packetItems = HIRAGANA_PACKETS[currentPacketIdx].items;
+      const packetItems = getCurrentPackets()[st.packetIdx].items;
 
       packetItems.forEach((item, idx) => {
-        const isActive = idx === currentCharIdx;
+        const isActive = idx === st.charIdx;
         const isMastered = Boolean(progress.mastered[item.kana]);
         const btn = document.createElement("button");
         btn.type = "button";
@@ -979,7 +1365,7 @@
     }
 
     function selectChar(idx) {
-      currentCharIdx = idx;
+      getCurrentState().charIdx = idx;
       strokes = [];
       setGradeDisplay(
         "Siap Berlatih ✍️",
@@ -991,18 +1377,31 @@
     }
 
     function selectPacket(pIdx) {
-      currentPacketIdx = pIdx;
+      getCurrentState().packetIdx = pIdx;
       selectChar(0);
     }
 
-    const packetSelect = document.getElementById("packet-select");
-    HIRAGANA_PACKETS.forEach((p, idx) => {
-      const opt = document.createElement("option");
-      opt.value = String(idx);
-      opt.textContent = p.name;
-      packetSelect.appendChild(opt);
-    });
-    packetSelect.addEventListener("change", (e) => selectPacket(Number(e.target.value)));
+    function selectScriptMode(modeKey) {
+      activeScript = modeKey;
+      strokes = [];
+      setGradeDisplay(
+        "Siap Berlatih ✍️",
+        "Ikuti bayangan huruf di kanvas, lalu klik <strong>Nilai</strong>. Kalau sudah ingat, matikan bayangan!",
+        "neutral"
+      );
+      updateUI();
+      renderCanvas();
+      if (activeTab === "quiz") {
+        renderQuizPacketToggles();
+        nextQuizQuestion();
+      }
+    }
+
+    document.getElementById("mode-hiragana").addEventListener("click", () => selectScriptMode("hiragana"));
+    document.getElementById("mode-tenten").addEventListener("click", () => selectScriptMode("tenten"));
+    document.getElementById("mode-katakana").addEventListener("click", () => selectScriptMode("katakana"));
+
+    document.getElementById("packet-select").addEventListener("change", (e) => selectPacket(Number(e.target.value)));
 
     document.getElementById("btn-audio").addEventListener("click", () => {
       speakKana(getActiveItem().kana);
@@ -1022,55 +1421,80 @@
     document.getElementById("btn-grade").addEventListener("click", evaluateDrawing);
 
     document.getElementById("btn-prev").addEventListener("click", () => {
-      if (currentCharIdx > 0) {
-        selectChar(currentCharIdx - 1);
+      const packets = getCurrentPackets();
+      const st = getCurrentState();
+      if (st.charIdx > 0) {
+        selectChar(st.charIdx - 1);
       } else {
-        currentPacketIdx = (currentPacketIdx - 1 + HIRAGANA_PACKETS.length) % HIRAGANA_PACKETS.length;
-        selectChar(HIRAGANA_PACKETS[currentPacketIdx].items.length - 1);
+        st.packetIdx = (st.packetIdx - 1 + packets.length) % packets.length;
+        selectChar(packets[st.packetIdx].items.length - 1);
       }
     });
 
     document.getElementById("btn-next").addEventListener("click", () => {
-      const items = HIRAGANA_PACKETS[currentPacketIdx].items;
-      if (currentCharIdx < items.length - 1) {
-        selectChar(currentCharIdx + 1);
+      const packets = getCurrentPackets();
+      const st = getCurrentState();
+      const items = packets[st.packetIdx].items;
+      if (st.charIdx < items.length - 1) {
+        selectChar(st.charIdx + 1);
       } else {
-        currentPacketIdx = (currentPacketIdx + 1) % HIRAGANA_PACKETS.length;
+        st.packetIdx = (st.packetIdx + 1) % packets.length;
         selectChar(0);
       }
     });
 
     document.getElementById("btn-reset-progress").addEventListener("click", () => {
-      progress = { mastered: {}, bestScores: {} };
+      progress = { mastered: {}, bestScores: {}, roadmapChecked: {} };
       saveProgress();
       updateUI();
-      setGradeDisplay("Progres Direset ↺", "Semua progres telah dikembalikan ke 0. Semangat berlatih lagi!", "neutral");
+      renderRoadmap();
+      setGradeDisplay("Progres Direset ↺", "Semua progres huruf dan target telah dikembalikan ke 0. Semangat berlatih lagi!", "neutral");
     });
 
-    const tabDraw = document.getElementById("tab-draw");
-    const tabQuiz = document.getElementById("tab-quiz");
-    const panelDraw = document.getElementById("panel-draw");
-    const panelQuiz = document.getElementById("panel-quiz");
-
     function switchTab(mode) {
-      if (mode === "draw") {
-        panelDraw.classList.remove("hidden");
-        panelQuiz.classList.add("hidden");
-        tabDraw.className = "btn btn-primary";
-        tabQuiz.className = "btn";
-        renderCanvas();
+      activeTab = mode;
+      const panels = {
+        draw: document.getElementById("panel-draw"),
+        quiz: document.getElementById("panel-quiz"),
+        roadmap: document.getElementById("panel-roadmap")
+      };
+      const tabs = {
+        draw: document.getElementById("tab-draw"),
+        quiz: document.getElementById("tab-quiz"),
+        roadmap: document.getElementById("tab-roadmap")
+      };
+
+      Object.keys(panels).forEach((k) => {
+        if (k === mode) {
+          panels[k].classList.remove("hidden");
+          tabs[k].className = "btn btn-primary";
+          tabs[k].setAttribute("aria-selected", "true");
+        } else {
+          panels[k].classList.add("hidden");
+          tabs[k].className = "btn";
+          tabs[k].setAttribute("aria-selected", "false");
+        }
+      });
+
+      const modeBar = document.getElementById("script-mode-bar");
+      if (mode === "roadmap") {
+        modeBar.classList.add("hidden");
+        renderRoadmap();
       } else {
-        panelQuiz.classList.remove("hidden");
-        panelDraw.classList.add("hidden");
-        tabQuiz.className = "btn btn-primary";
-        tabDraw.className = "btn";
+        modeBar.classList.remove("hidden");
+      }
+
+      if (mode === "draw") {
+        renderCanvas();
+      } else if (mode === "quiz") {
         renderQuizPacketToggles();
-        if (!currentQuiz) nextQuizQuestion();
+        nextQuizQuestion();
       }
     }
 
-    tabDraw.addEventListener("click", () => switchTab("draw"));
-    tabQuiz.addEventListener("click", () => switchTab("quiz"));
+    document.getElementById("tab-draw").addEventListener("click", () => switchTab("draw"));
+    document.getElementById("tab-quiz").addEventListener("click", () => switchTab("quiz"));
+    document.getElementById("tab-roadmap").addEventListener("click", () => switchTab("roadmap"));
 
     function shuffle(arr) {
       const copy = [...arr];
@@ -1082,31 +1506,35 @@
     }
 
     function getQuizPool() {
+      const packets = getCurrentPackets();
+      const selected = getCurrentState().quizPackets;
       const pool = [];
-      HIRAGANA_PACKETS.forEach((pkt, idx) => {
-        if (selectedQuizPackets.has(idx)) {
-          pool.push(...pkt.items);
-        }
+      packets.forEach((pkt, idx) => {
+        if (selected.has(idx)) pool.push(...pkt.items);
       });
-      return pool.length > 0 ? pool : HIRAGANA_PACKETS[0].items;
+      return pool.length > 0 ? pool : packets[0].items;
     }
 
     function renderQuizPacketToggles() {
+      const packets = getCurrentPackets();
+      const st = getCurrentState();
+      const selected = st.quizPackets;
       const container = document.getElementById("quiz-packet-toggles");
       container.innerHTML = "";
-      HIRAGANA_PACKETS.forEach((pkt, idx) => {
-        const isActive = selectedQuizPackets.has(idx);
+
+      packets.forEach((pkt, idx) => {
+        const isActive = selected.has(idx);
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = `quiz-pkt-btn${isActive ? " active" : ""}`;
-        btn.textContent = isActive ? `✓ ${QUIZ_SHORT_LABELS[idx]}` : QUIZ_SHORT_LABELS[idx];
+        btn.textContent = isActive ? `✓ ${pkt.short}` : pkt.short;
         btn.title = pkt.name;
         btn.addEventListener("click", () => {
-          if (selectedQuizPackets.has(idx)) {
-            if (selectedQuizPackets.size === 1) return;
-            selectedQuizPackets.delete(idx);
+          if (selected.has(idx)) {
+            if (selected.size === 1) return;
+            selected.delete(idx);
           } else {
-            selectedQuizPackets.add(idx);
+            selected.add(idx);
           }
           renderQuizPacketToggles();
           nextQuizQuestion();
@@ -1117,10 +1545,10 @@
       const pool = getQuizPool();
       document.getElementById("quiz-pool-count").textContent = `${pool.length} Huruf aktif`;
 
-      const isUpto = selectedQuizPackets.size === currentPacketIdx + 1 &&
-        [...selectedQuizPackets].every((i) => i <= currentPacketIdx);
-      const isCurrent = selectedQuizPackets.size === 1 && selectedQuizPackets.has(currentPacketIdx);
-      const isAll = selectedQuizPackets.size === HIRAGANA_PACKETS.length;
+      const isUpto = selected.size === st.packetIdx + 1 &&
+        [...selected].every((i) => i <= st.packetIdx);
+      const isCurrent = selected.size === 1 && selected.has(st.packetIdx);
+      const isAll = selected.size === packets.length;
 
       document.getElementById("quiz-preset-upto").className = `btn btn-sm${isUpto && !isCurrent && !isAll ? " btn-primary" : ""}`;
       document.getElementById("quiz-preset-current").className = `btn btn-sm${isCurrent ? " btn-primary" : ""}`;
@@ -1130,13 +1558,22 @@
     function nextQuizQuestion() {
       quizAnswered = false;
       const pool = getQuizPool();
+      const modeItems = getCurrentPackets().flatMap((p) => p.items);
 
       const target = pool[Math.floor(Math.random() * pool.length)];
-      const distractorPool = (pool.length >= 4 ? pool : ALL_ITEMS).filter((it) => it.kana !== target.kana);
-      const distractors = shuffle(distractorPool).slice(0, 3);
-      const options = shuffle([target, ...distractors]);
-      const mode = Math.random() < 0.5 ? "kana-to-romaji" : "romaji-to-kana";
+      const rawCandidates = pool.length >= 4 ? pool : modeItems;
+      const seenRomaji = new Set([target.romaji]);
+      const uniqueDistractors = [];
+      for (const it of shuffle(rawCandidates)) {
+        if (it.kana !== target.kana && !seenRomaji.has(it.romaji)) {
+          seenRomaji.add(it.romaji);
+          uniqueDistractors.push(it);
+          if (uniqueDistractors.length === 3) break;
+        }
+      }
 
+      const options = shuffle([target, ...uniqueDistractors]);
+      const mode = Math.random() < 0.5 ? "kana-to-romaji" : "romaji-to-kana";
       currentQuiz = { target, options, mode };
 
       const promptLabel = document.getElementById("quiz-prompt-label");
@@ -1151,13 +1588,12 @@
         promptLabel.textContent = "Apa bacaan huruf ini?";
         promptMain.textContent = target.kana;
         promptMain.style.fontSize = "64px";
-        hintText.textContent = `💡 ${target.mnemonic}`;
       } else {
-        promptLabel.textContent = "Pilih huruf Hiragana untuk:";
+        promptLabel.textContent = "Pilih huruf yang tepat untuk:";
         promptMain.textContent = `"${target.romaji.toUpperCase()}"`;
-        promptMain.style.fontSize = "40px";
-        hintText.textContent = `💡 ${target.mnemonic}`;
+        promptMain.style.fontSize = "36px";
       }
+      hintText.textContent = `💡 ${target.mnemonic}`;
 
       const optionsEl = document.getElementById("quiz-options");
       optionsEl.innerHTML = "";
@@ -1215,23 +1651,71 @@
     document.getElementById("quiz-next-btn").addEventListener("click", nextQuizQuestion);
 
     document.getElementById("quiz-preset-upto").addEventListener("click", () => {
-      selectedQuizPackets = new Set();
-      for (let i = 0; i <= currentPacketIdx; i++) selectedQuizPackets.add(i);
+      const st = getCurrentState();
+      st.quizPackets = new Set();
+      for (let i = 0; i <= st.packetIdx; i++) st.quizPackets.add(i);
       renderQuizPacketToggles();
       nextQuizQuestion();
     });
 
     document.getElementById("quiz-preset-current").addEventListener("click", () => {
-      selectedQuizPackets = new Set([currentPacketIdx]);
+      const st = getCurrentState();
+      st.quizPackets = new Set([st.packetIdx]);
       renderQuizPacketToggles();
       nextQuizQuestion();
     });
 
     document.getElementById("quiz-preset-all").addEventListener("click", () => {
-      selectedQuizPackets = new Set(HIRAGANA_PACKETS.map((_, i) => i));
+      const packets = getCurrentPackets();
+      getCurrentState().quizPackets = new Set(packets.map((_, i) => i));
       renderQuizPacketToggles();
       nextQuizQuestion();
     });
+
+    function renderRoadmap() {
+      const container = document.getElementById("roadmap-list");
+      container.innerHTML = "";
+      let doneCount = 0;
+
+      ROADMAP_MONTHS.forEach((group) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const title = document.createElement("div");
+        title.className = "roadmap-month-title";
+        title.textContent = group.month;
+        card.appendChild(title);
+
+        group.items.forEach((item) => {
+          const checked = Boolean(progress.roadmapChecked[item.id]);
+          if (checked) doneCount++;
+
+          const label = document.createElement("label");
+          label.className = "roadmap-item";
+
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.checked = checked;
+          cb.addEventListener("change", () => {
+            progress.roadmapChecked[item.id] = cb.checked;
+            saveProgress();
+            renderRoadmap();
+          });
+
+          const span = document.createElement("span");
+          span.textContent = item.text;
+          if (checked) span.className = "done";
+
+          label.appendChild(cb);
+          label.appendChild(span);
+          card.appendChild(label);
+        });
+
+        container.appendChild(card);
+      });
+
+      document.getElementById("roadmap-progress").textContent = `${doneCount} / ${TOTAL_ROADMAP_ITEMS} Selesai`;
+    }
 
     if (window.matchMedia) {
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderCanvas);
@@ -1240,6 +1724,7 @@
     updateUI();
     renderCanvas();
     renderQuizPacketToggles();
+    renderRoadmap();
   </script>
 </body>
 </html>
