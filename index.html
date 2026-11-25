@@ -442,6 +442,54 @@
       color: var(--tone-b-fg);
     }
 
+    .quiz-text-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .quiz-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--card-subtle);
+      color: var(--fg);
+      outline: none;
+    }
+
+    .quiz-input:focus {
+      border-color: var(--primary);
+    }
+
+    .quiz-draw-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .quiz-canvas-frame {
+      width: 170px;
+      height: 170px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card);
+      flex-shrink: 0;
+    }
+
+    #quiz-canvas {
+      display: block;
+      width: 170px;
+      height: 170px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
     .roadmap-banner {
       display: flex;
       flex-wrap: wrap;
@@ -627,16 +675,40 @@
 
       <div class="main-grid">
         <section class="card stack-sm" style="text-align:center; min-height:220px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-          <div id="quiz-prompt-label" style="font-size:13px; color:var(--muted); font-weight:600;">Apa bacaan huruf ini?</div>
+          <div id="quiz-prompt-label" style="font-size:13px; color:var(--muted); font-weight:600;">Ketik bacaan huruf ini:</div>
           <div id="quiz-prompt-main" style="font-size:64px; font-weight:700; line-height:1.1; margin:8px 0;">あ</div>
-          <button id="quiz-hint-btn" type="button" class="btn btn-sm">💡 Lihat Petunjuk</button>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+            <button id="quiz-hint-btn" type="button" class="btn btn-sm">💡 Petunjuk</button>
+            <button id="quiz-use-options-btn" type="button" class="btn btn-sm">🧩 Pakai Pilihan</button>
+          </div>
           <div id="quiz-hint-text" class="hidden" style="font-size:13px; color:var(--muted); max-width:340px;"></div>
         </section>
 
         <section class="stack-md">
-          <div id="quiz-options" class="quiz-options"></div>
+          <div id="quiz-text-area" class="card">
+            <label for="quiz-text-input" style="font-size:13px; color:var(--muted); font-weight:600;">Ketik bunyi huruf (Romaji), lalu tekan Enter:</label>
+            <div class="quiz-text-row">
+              <input id="quiz-text-input" type="text" autocomplete="off" autocapitalize="none" spellcheck="false"
+                placeholder="Contoh: a, ka, shi..." class="quiz-input" />
+              <button id="quiz-text-submit" type="button" class="btn btn-primary" style="flex-shrink:0;">✓ Jawab</button>
+            </div>
+          </div>
+
+          <div id="quiz-draw-area" class="card quiz-draw-wrap hidden">
+            <div class="quiz-canvas-frame">
+              <canvas id="quiz-canvas" width="200" height="200"></canvas>
+            </div>
+            <div class="stack-sm" style="flex:1; min-width:140px;">
+              <button id="quiz-canvas-submit" type="button" class="btn btn-primary" style="width:100%;">✓ Cek Gambar</button>
+              <button id="quiz-canvas-clear" type="button" class="btn" style="width:100%;">🧹 Hapus</button>
+              <div style="font-size:12px; color:var(--muted);">Gambar hurufnya dari ingatan (tanpa bayangan).</div>
+            </div>
+          </div>
+
+          <div id="quiz-options" class="quiz-options hidden"></div>
+
           <div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:72px;">
-            <span id="quiz-feedback-text" style="font-size:13px; color:var(--muted);">Pilih paket di atas untuk menggabungkan latihan, lalu jawab soal.</span>
+            <span id="quiz-feedback-text" style="font-size:13px; color:var(--muted);">Jawab langsung, atau klik <strong>🧩 Pakai Pilihan</strong> jika lupa.</span>
             <button id="quiz-next-btn" type="button" class="btn btn-sm btn-primary hidden" style="flex-shrink:0;">Lanjut →</button>
           </div>
         </section>
@@ -1030,8 +1102,7 @@
 
     let showGhost = true;
     let strokes = [];
-    let isDrawing = false;
-    let currentStroke = [];
+    let quizStrokes = [];
 
     let quizStreak = 0;
     let quizCorrect = 0;
@@ -1040,7 +1111,7 @@
     let quizAnswered = false;
 
     const canvas = document.getElementById("draw-canvas");
-    const ctx = canvas.getContext("2d");
+    const quizCanvas = document.getElementById("quiz-canvas");
 
     function getCurrentPackets() {
       return SCRIPT_MODES[activeScript].packets;
@@ -1064,87 +1135,104 @@
       };
     }
 
-    function renderCanvas() {
+    function renderCanvasSurface(targetCanvas, strokeList, ghostChar) {
+      const g = targetCanvas.getContext("2d");
       const { fg, muted, border } = getThemeColors();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      g.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
 
-      ctx.save();
-      ctx.strokeStyle = border;
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(100, 8);
-      ctx.lineTo(100, 192);
-      ctx.moveTo(8, 100);
-      ctx.lineTo(192, 100);
-      ctx.stroke();
-      ctx.restore();
+      g.save();
+      g.strokeStyle = border;
+      g.lineWidth = 1;
+      g.setLineDash([4, 4]);
+      g.beginPath();
+      g.moveTo(100, 8);
+      g.lineTo(100, 192);
+      g.moveTo(8, 100);
+      g.lineTo(192, 100);
+      g.stroke();
+      g.restore();
 
-      if (showGhost) {
-        const item = getActiveItem();
-        ctx.save();
-        ctx.fillStyle = muted;
-        ctx.globalAlpha = 0.24;
-        ctx.font = '600 135px "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif';
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(item.kana, 100, 104);
-        ctx.restore();
+      if (ghostChar) {
+        g.save();
+        g.fillStyle = muted;
+        g.globalAlpha = 0.24;
+        g.font = '600 135px "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif';
+        g.textAlign = "center";
+        g.textBaseline = "middle";
+        g.fillText(ghostChar, 100, 104);
+        g.restore();
       }
 
-      ctx.save();
-      ctx.strokeStyle = fg;
-      ctx.lineWidth = 10;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      for (const stroke of strokes) {
+      g.save();
+      g.strokeStyle = fg;
+      g.lineWidth = 10;
+      g.lineCap = "round";
+      g.lineJoin = "round";
+      for (const stroke of strokeList) {
         if (stroke.length === 0) continue;
-        ctx.beginPath();
-        ctx.moveTo(stroke[0].x, stroke[0].y);
+        g.beginPath();
+        g.moveTo(stroke[0].x, stroke[0].y);
         if (stroke.length === 1) {
-          ctx.lineTo(stroke[0].x + 0.1, stroke[0].y + 0.1);
+          g.lineTo(stroke[0].x + 0.1, stroke[0].y + 0.1);
         } else {
           for (let i = 1; i < stroke.length; i++) {
-            ctx.lineTo(stroke[i].x, stroke[i].y);
+            g.lineTo(stroke[i].x, stroke[i].y);
           }
         }
-        ctx.stroke();
+        g.stroke();
       }
-      ctx.restore();
+      g.restore();
     }
 
-    function getPointerPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      return {
-        x: ((e.clientX - rect.left) / rect.width) * canvas.width,
-        y: ((e.clientY - rect.top) / rect.height) * canvas.height
+    function renderCanvas() {
+      renderCanvasSurface(canvas, strokes, showGhost ? getActiveItem().kana : null);
+    }
+
+    function renderQuizCanvas() {
+      const ghost = quizAnswered && currentQuiz ? currentQuiz.target.kana : null;
+      renderCanvasSurface(quizCanvas, quizStrokes, ghost);
+    }
+
+    function attachCanvasPointerHandlers(targetCanvas, getStrokeList, redrawFn) {
+      let drawing = false;
+      let activeStroke = [];
+
+      const getPos = (e) => {
+        const rect = targetCanvas.getBoundingClientRect();
+        return {
+          x: ((e.clientX - rect.left) / rect.width) * targetCanvas.width,
+          y: ((e.clientY - rect.top) / rect.height) * targetCanvas.height
+        };
       };
+
+      targetCanvas.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        targetCanvas.setPointerCapture(e.pointerId);
+        drawing = true;
+        activeStroke = [getPos(e)];
+        getStrokeList().push(activeStroke);
+        redrawFn();
+      });
+
+      targetCanvas.addEventListener("pointermove", (e) => {
+        if (!drawing) return;
+        activeStroke.push(getPos(e));
+        redrawFn();
+      });
+
+      const stop = () => {
+        if (!drawing) return;
+        drawing = false;
+        activeStroke = [];
+        redrawFn();
+      };
+
+      targetCanvas.addEventListener("pointerup", stop);
+      targetCanvas.addEventListener("pointercancel", stop);
     }
 
-    canvas.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      canvas.setPointerCapture(e.pointerId);
-      isDrawing = true;
-      currentStroke = [getPointerPos(e)];
-      strokes.push(currentStroke);
-      renderCanvas();
-    });
-
-    canvas.addEventListener("pointermove", (e) => {
-      if (!isDrawing) return;
-      currentStroke.push(getPointerPos(e));
-      renderCanvas();
-    });
-
-    function endStroke() {
-      if (!isDrawing) return;
-      isDrawing = false;
-      currentStroke = [];
-      renderCanvas();
-    }
-
-    canvas.addEventListener("pointerup", endStroke);
-    canvas.addEventListener("pointercancel", endStroke);
+    attachCanvasPointerHandlers(canvas, () => strokes, renderCanvas);
+    attachCanvasPointerHandlers(quizCanvas, () => quizStrokes, renderQuizCanvas);
 
     function createOffscreenMask(drawFn) {
       const c = document.createElement("canvas");
@@ -1155,12 +1243,12 @@
       return g.getImageData(0, 0, 200, 200).data;
     }
 
-    function drawUserStrokesToCtx(g, lineWidth) {
+    function drawStrokeListToCtx(g, strokeList, lineWidth) {
       g.strokeStyle = "#000";
       g.lineWidth = lineWidth;
       g.lineCap = "round";
       g.lineJoin = "round";
-      for (const stroke of strokes) {
+      for (const stroke of strokeList) {
         if (stroke.length === 0) continue;
         g.beginPath();
         g.moveTo(stroke[0].x, stroke[0].y);
@@ -1175,25 +1263,10 @@
       }
     }
 
-    function setGradeDisplay(title, desc, tone) {
-      const box = document.getElementById("grade-box");
-      document.getElementById("grade-title").textContent = title;
-      document.getElementById("grade-desc").innerHTML = desc;
-      box.className = "grade-box";
-      if (tone === "S") box.classList.add("tone-S");
-      else if (tone === "A") box.classList.add("tone-A");
-      else if (tone === "B") box.classList.add("tone-B");
-    }
+    function scoreStrokesAgainstKana(strokeList, targetKana) {
+      if (strokeList.length === 0) return { ok: false, reason: "empty" };
 
-    function evaluateDrawing() {
-      if (strokes.length === 0) {
-        setGradeDisplay("Kanvas Masih Kosong ✍️", "Silakan gambar hurufnya terlebih dahulu di kanvas sebelum dinilai.", "neutral");
-        return;
-      }
-
-      const item = getActiveItem();
       const fontSpec = '600 135px "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif';
-
       const coreRef = createOffscreenMask((g) => {
         g.font = fontSpec;
         g.textAlign = "center";
@@ -1203,8 +1276,8 @@
         g.lineWidth = 18;
         g.strokeStyle = "#000";
         g.fillStyle = "#000";
-        g.strokeText(item.kana, 100, 104);
-        g.fillText(item.kana, 100, 104);
+        g.strokeText(targetKana, 100, 104);
+        g.fillText(targetKana, 100, 104);
       });
 
       const wideRef = createOffscreenMask((g) => {
@@ -1216,12 +1289,12 @@
         g.lineWidth = 34;
         g.strokeStyle = "#000";
         g.fillStyle = "#000";
-        g.strokeText(item.kana, 100, 104);
-        g.fillText(item.kana, 100, 104);
+        g.strokeText(targetKana, 100, 104);
+        g.fillText(targetKana, 100, 104);
       });
 
-      const userDilated = createOffscreenMask((g) => drawUserStrokesToCtx(g, 20));
-      const userRaw = createOffscreenMask((g) => drawUserStrokesToCtx(g, 10));
+      const userDilated = createOffscreenMask((g) => drawStrokeListToCtx(g, strokeList, 20));
+      const userRaw = createOffscreenMask((g) => drawStrokeListToCtx(g, strokeList, 10));
 
       let coreCount = 0;
       let coveredCount = 0;
@@ -1244,19 +1317,42 @@
         }
       }
 
-      if (userRawCount < 35) {
-        setGradeDisplay("Goresan Terlalu Sedikit ↺", "Gambar lebih lengkap ya—ikuti bentuk utuh huruf di kanvas.", "neutral");
-        return;
-      }
+      if (userRawCount < 35) return { ok: false, reason: "too_short" };
 
       const coverage = coreCount > 0 ? coveredCount / coreCount : 0;
       const precision = userRawCount > 0 ? insideWideCount / userRawCount : 0;
-
       const adjCov = Math.min(1, coverage / 0.72);
       const adjPrec = Math.min(1, precision / 0.94);
       const harmonic = (adjCov > 0 && adjPrec > 0) ? (2 * adjCov * adjPrec) / (adjCov + adjPrec) : 0;
       const score = Math.min(99, Math.max(5, Math.round(harmonic * 100)));
 
+      return { ok: true, score, adjCov, adjPrec };
+    }
+
+    function setGradeDisplay(title, desc, tone) {
+      const box = document.getElementById("grade-box");
+      document.getElementById("grade-title").textContent = title;
+      document.getElementById("grade-desc").innerHTML = desc;
+      box.className = "grade-box";
+      if (tone === "S") box.classList.add("tone-S");
+      else if (tone === "A") box.classList.add("tone-A");
+      else if (tone === "B") box.classList.add("tone-B");
+    }
+
+    function evaluateDrawing() {
+      const item = getActiveItem();
+      const res = scoreStrokesAgainstKana(strokes, item.kana);
+
+      if (!res.ok) {
+        if (res.reason === "empty") {
+          setGradeDisplay("Kanvas Masih Kosong ✍️", "Silakan gambar hurufnya terlebih dahulu di kanvas sebelum dinilai.", "neutral");
+        } else {
+          setGradeDisplay("Goresan Terlalu Sedikit ↺", "Gambar lebih lengkap ya—ikuti bentuk utuh huruf di kanvas.", "neutral");
+        }
+        return;
+      }
+
+      const { score, adjCov, adjPrec } = res;
       const prevBest = progress.bestScores[item.kana] || 0;
       if (score > prevBest) progress.bestScores[item.kana] = score;
 
@@ -1557,6 +1653,7 @@
 
     function nextQuizQuestion() {
       quizAnswered = false;
+      quizStrokes = [];
       const pool = getQuizPool();
       const modeItems = getCurrentPackets().flatMap((p) => p.items);
 
@@ -1580,51 +1677,110 @@
       const promptMain = document.getElementById("quiz-prompt-main");
       const hintBtn = document.getElementById("quiz-hint-btn");
       const hintText = document.getElementById("quiz-hint-text");
+      const useOptionsBtn = document.getElementById("quiz-use-options-btn");
+      const textArea = document.getElementById("quiz-text-area");
+      const drawArea = document.getElementById("quiz-draw-area");
+      const optionsEl = document.getElementById("quiz-options");
+      const textInput = document.getElementById("quiz-text-input");
 
       hintText.classList.add("hidden");
       hintBtn.classList.remove("hidden");
+      optionsEl.classList.add("hidden");
+      useOptionsBtn.classList.remove("hidden");
 
       if (mode === "kana-to-romaji") {
-        promptLabel.textContent = "Apa bacaan huruf ini?";
+        promptLabel.textContent = "Ketik bacaan huruf ini:";
         promptMain.textContent = target.kana;
         promptMain.style.fontSize = "64px";
+        textArea.classList.remove("hidden");
+        drawArea.classList.add("hidden");
+        textInput.value = "";
+        textInput.disabled = false;
+        setTimeout(() => textInput.focus(), 20);
       } else {
-        promptLabel.textContent = "Pilih huruf yang tepat untuk:";
+        promptLabel.textContent = "Gambar huruf Jepang untuk:";
         promptMain.textContent = `"${target.romaji.toUpperCase()}"`;
         promptMain.style.fontSize = "36px";
+        drawArea.classList.remove("hidden");
+        textArea.classList.add("hidden");
+        renderQuizCanvas();
       }
       hintText.textContent = `💡 ${target.mnemonic}`;
 
-      const optionsEl = document.getElementById("quiz-options");
       optionsEl.innerHTML = "";
       options.forEach((opt) => {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "quiz-opt-btn";
         btn.textContent = mode === "kana-to-romaji" ? opt.romaji.toUpperCase() : opt.kana;
-        btn.addEventListener("click", () => handleQuizAnswer(opt, btn));
+        btn.addEventListener("click", () => handleQuizOptionAnswer(opt, btn));
         optionsEl.appendChild(btn);
       });
 
-      document.getElementById("quiz-feedback-text").textContent = "Pilih satu jawaban yang paling tepat.";
+      document.getElementById("quiz-feedback-text").innerHTML =
+        "Jawab langsung, atau klik <strong>🧩 Pakai Pilihan</strong> jika lupa.";
       document.getElementById("quiz-next-btn").classList.add("hidden");
     }
 
-    function handleQuizAnswer(selected, btnEl) {
-      if (quizAnswered) return;
+    function finishQuizTurn(isCorrect, detailPrefix) {
       quizAnswered = true;
       quizTotal++;
-
-      const isCorrect = selected.kana === currentQuiz.target.kana;
       if (isCorrect) {
         quizCorrect++;
         quizStreak++;
-        btnEl.classList.add("correct");
-        btnEl.textContent = `✓ ${btnEl.textContent}`;
         document.getElementById("quiz-feedback-text").innerHTML =
-          `<strong>✓ Benar!</strong> ${currentQuiz.target.kana} (${currentQuiz.target.romaji}) — ${currentQuiz.target.word}`;
+          `<strong>✓ ${detailPrefix || "Benar!"}</strong> ${currentQuiz.target.kana} (${currentQuiz.target.romaji}) — ${currentQuiz.target.word}`;
       } else {
         quizStreak = 0;
+        document.getElementById("quiz-feedback-text").innerHTML =
+          `<strong>✕ ${detailPrefix || "Kurang tepat."}</strong> Jawaban: <strong>${currentQuiz.target.kana} (${currentQuiz.target.romaji})</strong>. Ingat: <em>${currentQuiz.target.mnemonic}</em>`;
+      }
+      document.getElementById("quiz-streak").textContent = String(quizStreak);
+      document.getElementById("quiz-score").textContent = `${quizCorrect}/${quizTotal}`;
+      document.getElementById("quiz-next-btn").classList.remove("hidden");
+      document.getElementById("quiz-use-options-btn").classList.add("hidden");
+      document.getElementById("quiz-text-input").disabled = true;
+    }
+
+    function handleQuizTextSubmit() {
+      if (quizAnswered) {
+        nextQuizQuestion();
+        return;
+      }
+      const raw = document.getElementById("quiz-text-input").value.trim().toLowerCase();
+      if (!raw) {
+        document.getElementById("quiz-feedback-text").textContent =
+          "Ketik bacaan romajinya dulu, atau klik 🧩 Pakai Pilihan.";
+        return;
+      }
+      const accepted = currentQuiz.target.romaji.split("/").map((s) => s.trim().toLowerCase());
+      const isCorrect = accepted.includes(raw);
+      finishQuizTurn(isCorrect, isCorrect ? "Benar!" : `Jawabanmu "${raw}" kurang tepat.`);
+    }
+
+    function handleQuizCanvasSubmit() {
+      if (quizAnswered) return;
+      const res = scoreStrokesAgainstKana(quizStrokes, currentQuiz.target.kana);
+      if (!res.ok) {
+        document.getElementById("quiz-feedback-text").textContent =
+          "Gambar hurufnya dulu di kanvas, atau klik 🧩 Pakai Pilihan.";
+        return;
+      }
+      const isCorrect = res.score >= 60;
+      finishQuizTurn(
+        isCorrect,
+        isCorrect ? `Benar! (${res.score}%)` : `Bentuk belum pas (${res.score}%).`
+      );
+      renderQuizCanvas();
+    }
+
+    function handleQuizOptionAnswer(selected, btnEl) {
+      if (quizAnswered) return;
+      const isCorrect = selected.kana === currentQuiz.target.kana;
+      if (isCorrect) {
+        btnEl.classList.add("correct");
+        btnEl.textContent = `✓ ${btnEl.textContent}`;
+      } else {
         btnEl.classList.add("wrong");
         btnEl.textContent = `✕ ${btnEl.textContent}`;
         const buttons = document.getElementById("quiz-options").querySelectorAll("button");
@@ -1634,14 +1790,33 @@
             buttons[idx].textContent = `✓ ${buttons[idx].textContent}`;
           }
         });
-        document.getElementById("quiz-feedback-text").innerHTML =
-          `<strong>✕ Kurang tepat.</strong> Jawaban: <strong>${currentQuiz.target.kana} (${currentQuiz.target.romaji})</strong>. Ingat: <em>${currentQuiz.target.mnemonic}</em>`;
       }
-
-      document.getElementById("quiz-streak").textContent = String(quizStreak);
-      document.getElementById("quiz-score").textContent = `${quizCorrect}/${quizTotal}`;
-      document.getElementById("quiz-next-btn").classList.remove("hidden");
+      finishQuizTurn(isCorrect, isCorrect ? "Benar!" : "Kurang tepat.");
     }
+
+    document.getElementById("quiz-text-submit").addEventListener("click", handleQuizTextSubmit);
+    document.getElementById("quiz-text-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleQuizTextSubmit();
+      }
+    });
+
+    document.getElementById("quiz-canvas-submit").addEventListener("click", handleQuizCanvasSubmit);
+    document.getElementById("quiz-canvas-clear").addEventListener("click", () => {
+      if (quizAnswered) return;
+      quizStrokes = [];
+      renderQuizCanvas();
+    });
+
+    document.getElementById("quiz-use-options-btn").addEventListener("click", () => {
+      if (quizAnswered) return;
+      document.getElementById("quiz-text-area").classList.add("hidden");
+      document.getElementById("quiz-draw-area").classList.add("hidden");
+      document.getElementById("quiz-options").classList.remove("hidden");
+      document.getElementById("quiz-use-options-btn").classList.add("hidden");
+      document.getElementById("quiz-feedback-text").textContent = "Pilih satu jawaban yang paling tepat.";
+    });
 
     document.getElementById("quiz-hint-btn").addEventListener("click", () => {
       document.getElementById("quiz-hint-text").classList.remove("hidden");
@@ -1718,7 +1893,10 @@
     }
 
     if (window.matchMedia) {
-      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderCanvas);
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+        renderCanvas();
+        renderQuizCanvas();
+      });
     }
 
     updateUI();
