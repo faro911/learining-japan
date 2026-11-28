@@ -562,6 +562,47 @@
       color: var(--tone-b-fg);
       margin-left: 6px;
     }
+
+    .word-canvases-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    .word-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .word-canvas-frame {
+      width: 130px;
+      height: 130px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card);
+    }
+
+    .word-canvas-frame canvas {
+      display: block;
+      width: 130px;
+      height: 130px;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .word-slot-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 12px;
+      padding: 0 2px;
+    }
   </style>
 </head>
 <body>
@@ -582,7 +623,10 @@
         ✏️ Gambar &amp; Nilai
       </button>
       <button id="tab-quiz" type="button" role="tab" aria-selected="false" class="btn">
-        🧠 Kuis Anti-Lupa
+        🧠 Kuis Huruf
+      </button>
+      <button id="tab-wordquiz" type="button" role="tab" aria-selected="false" class="btn">
+        📝 Tulis Kata
       </button>
       <button id="tab-roadmap" type="button" role="tab" aria-selected="false" class="btn">
         📅 Target 6 Bulan
@@ -659,13 +703,16 @@
     <!-- TAB 2: ANTI-FORGET QUIZ -->
     <main id="panel-quiz" class="hidden">
       <div class="quiz-top">
-        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <button id="quiz-preset-upto" type="button" class="btn btn-sm">Paket 1 s/d Aktif</button>
-          <button id="quiz-preset-current" type="button" class="btn btn-sm">Hanya Paket Ini</button>
-          <button id="quiz-preset-all" type="button" class="btn btn-sm">Semua Paket</button>
+        <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+          <button id="quiz-preset-upto" type="button" class="btn btn-sm">P1 s/d Aktif</button>
+          <button id="quiz-preset-current" type="button" class="btn btn-sm">Paket Ini</button>
+          <button id="quiz-preset-all" type="button" class="btn btn-sm">Semua</button>
+          <span style="color:var(--muted);">|</span>
+          <button id="quiz-mode-input" type="button" class="btn btn-sm btn-primary">✍️ Isian/Gambar</button>
+          <button id="quiz-mode-choice" type="button" class="btn btn-sm">🔘 Pilihan Ganda</button>
         </div>
         <div style="display:flex; align-items:center; gap:10px; font-size:14px; font-weight:700; flex-wrap:wrap;">
-          <span id="quiz-pool-count" class="quiz-pool-badge">10 Huruf aktif</span>
+          <span id="quiz-pool-count" class="quiz-pool-badge">10 Huruf</span>
           <span>🔥 <strong id="quiz-streak">0</strong></span>
           <span>✓ <strong id="quiz-score">0/0</strong></span>
         </div>
@@ -715,7 +762,52 @@
       </div>
     </main>
 
-    <!-- TAB 3: 6-MONTH ROADMAP -->
+    <!-- TAB 3: WORD WRITING QUIZ -->
+    <main id="panel-wordquiz" class="hidden">
+      <div class="quiz-top">
+        <span style="font-size:13px; color:var(--muted); font-weight:600;">Pilih paket yang sudah kamu hafal:</span>
+        <div style="display:flex; align-items:center; gap:10px; font-size:14px; font-weight:700;">
+          <span id="word-pool-count" class="quiz-pool-badge">0 Kata tersedia</span>
+          <span>✓ <strong id="word-score">0/0</strong></span>
+        </div>
+      </div>
+
+      <div id="word-packet-toggles" class="quiz-packets-grid"></div>
+
+      <div id="word-empty-msg" class="card hidden" style="text-align:center;">
+        <p style="font-size:13px; color:var(--muted); margin:0 0 12px;">
+          Belum ada kata yang bisa dirangkai hanya dari paket yang dipilih. Tambahkan <strong>Paket 1 (A-O)</strong> atau pilih minimal 2 paket!
+        </p>
+        <button id="word-add-p1-btn" type="button" class="btn btn-sm btn-primary">+ Gabungkan dengan Paket 1 (A-O)</button>
+      </div>
+
+      <div id="word-play-area" class="card">
+        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; border-bottom:1px solid var(--border);">
+          <div>
+            <span style="font-size:13px; color:var(--muted);">Tuliskan kata: </span>
+            <strong id="word-prompt-romaji" style="font-size:22px; letter-spacing:0.04em;">SUSHI</strong>
+            <span id="word-prompt-meaning" style="font-size:13px; color:var(--muted);">(Sushi)</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button id="word-audio-btn" type="button" class="btn btn-sm">🔊 Dengar</button>
+            <button id="word-hint-btn" type="button" class="btn btn-sm">💡 Petunjuk</button>
+          </div>
+        </div>
+
+        <div id="word-canvases" class="word-canvases-row"></div>
+
+        <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; padding-top:10px; border-top:1px solid var(--border);">
+          <span id="word-feedback-text" style="font-size:13px; color:var(--muted);">Tulis setiap huruf di kotaknya masing-masing, lalu klik <strong>✓ Cek Kata</strong>.</span>
+          <div style="display:flex; gap:8px; flex-shrink:0;">
+            <button id="word-clear-btn" type="button" class="btn btn-sm">🧹 Hapus</button>
+            <button id="word-check-btn" type="button" class="btn btn-sm btn-primary">✓ Cek Kata</button>
+            <button id="word-next-btn" type="button" class="btn btn-sm btn-primary hidden">Kata Berikutnya →</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 4: 6-MONTH ROADMAP -->
     <main id="panel-roadmap" class="hidden">
       <div class="roadmap-banner">
         <div style="color:var(--muted);">
@@ -1017,6 +1109,119 @@
       }
     };
 
+    const WORD_BANK = {
+      hiragana: [
+        { kana: "あい", romaji: "ai", meaning: "Cinta" },
+        { kana: "いえ", romaji: "ie", meaning: "Rumah" },
+        { kana: "うえ", romaji: "ue", meaning: "Atas" },
+        { kana: "あお", romaji: "ao", meaning: "Biru" },
+        { kana: "あう", romaji: "au", meaning: "Bertemu" },
+        { kana: "いう", romaji: "iu", meaning: "Berkata" },
+        { kana: "あか", romaji: "aka", meaning: "Merah" },
+        { kana: "かお", romaji: "kao", meaning: "Wajah" },
+        { kana: "えき", romaji: "eki", meaning: "Stasiun" },
+        { kana: "きく", romaji: "kiku", meaning: "Mendengar" },
+        { kana: "いけ", romaji: "ike", meaning: "Kolam" },
+        { kana: "こえ", romaji: "koe", meaning: "Suara" },
+        { kana: "あき", romaji: "aki", meaning: "Musim gugur" },
+        { kana: "いか", romaji: "ika", meaning: "Cumi-cumi" },
+        { kana: "すし", romaji: "sushi", meaning: "Sushi" },
+        { kana: "かさ", romaji: "kasa", meaning: "Payung" },
+        { kana: "あさ", romaji: "asa", meaning: "Pagi" },
+        { kana: "うし", romaji: "ushi", meaning: "Sapi" },
+        { kana: "あし", romaji: "ashi", meaning: "Kaki" },
+        { kana: "さけ", romaji: "sake", meaning: "Salmon / Sake" },
+        { kana: "せかい", romaji: "sekai", meaning: "Dunia" },
+        { kana: "すいか", romaji: "suika", meaning: "Semangka" },
+        { kana: "しお", romaji: "shio", meaning: "Garam" },
+        { kana: "くつ", romaji: "kutsu", meaning: "Sepatu" },
+        { kana: "うた", romaji: "uta", meaning: "Lagu" },
+        { kana: "した", romaji: "shita", meaning: "Bawah" },
+        { kana: "つき", romaji: "tsuki", meaning: "Bulan" },
+        { kana: "おと", romaji: "oto", meaning: "Bunyi" },
+        { kana: "とけい", romaji: "tokei", meaning: "Jam" },
+        { kana: "ちか", romaji: "chika", meaning: "Bawah tanah" },
+        { kana: "いぬ", romaji: "inu", meaning: "Anjing" },
+        { kana: "ねこ", romaji: "neko", meaning: "Kucing" },
+        { kana: "さかな", romaji: "sakana", meaning: "Ikan" },
+        { kana: "おかね", romaji: "okane", meaning: "Uang" },
+        { kana: "にく", romaji: "niku", meaning: "Daging" },
+        { kana: "なつ", romaji: "natsu", meaning: "Musim panas" },
+        { kana: "くに", romaji: "kuni", meaning: "Negara" },
+        { kana: "なに", romaji: "nani", meaning: "Apa" },
+        { kana: "はな", romaji: "hana", meaning: "Bunga" },
+        { kana: "ひと", romaji: "hito", meaning: "Orang" },
+        { kana: "ほし", romaji: "hoshi", meaning: "Bintang" },
+        { kana: "ふね", romaji: "fune", meaning: "Kapal" },
+        { kana: "はし", romaji: "hashi", meaning: "Sumpit" },
+        { kana: "あめ", romaji: "ame", meaning: "Hujan" },
+        { kana: "うみ", romaji: "umi", meaning: "Laut" },
+        { kana: "むし", romaji: "mushi", meaning: "Serangga" },
+        { kana: "もも", romaji: "momo", meaning: "Buah persik" },
+        { kana: "みみ", romaji: "mimi", meaning: "Telinga" },
+        { kana: "やま", romaji: "yama", meaning: "Gunung" },
+        { kana: "ゆき", romaji: "yuki", meaning: "Salju" },
+        { kana: "へや", romaji: "heya", meaning: "Kamar" },
+        { kana: "ゆめ", romaji: "yume", meaning: "Mimpi" },
+        { kana: "よる", romaji: "yoru", meaning: "Malam" },
+        { kana: "そら", romaji: "sora", meaning: "Langit" },
+        { kana: "くるま", romaji: "kuruma", meaning: "Mobil" },
+        { kana: "とり", romaji: "tori", meaning: "Burung" },
+        { kana: "しろ", romaji: "shiro", meaning: "Putih" },
+        { kana: "ひる", romaji: "hiru", meaning: "Siang" },
+        { kana: "ほん", romaji: "hon", meaning: "Buku" },
+        { kana: "かわ", romaji: "kawa", meaning: "Sungai" },
+        { kana: "にほん", romaji: "nihon", meaning: "Jepang" },
+        { kana: "てんき", romaji: "tenki", meaning: "Cuaca" },
+        { kana: "みかん", romaji: "mikan", meaning: "Jeruk" }
+      ],
+      tenten: [
+        { kana: "かぎ", romaji: "kagi", meaning: "Kunci" },
+        { kana: "かぐ", romaji: "kagu", meaning: "Perabot" },
+        { kana: "たまご", romaji: "tamago", meaning: "Telur" },
+        { kana: "かぜ", romaji: "kaze", meaning: "Angin" },
+        { kana: "みず", romaji: "mizu", meaning: "Air" },
+        { kana: "じかん", romaji: "jikan", meaning: "Waktu" },
+        { kana: "まど", romaji: "mado", meaning: "Jendela" },
+        { kana: "だれ", romaji: "dare", meaning: "Siapa" },
+        { kana: "どこ", romaji: "doko", meaning: "Di mana" },
+        { kana: "かばん", romaji: "kaban", meaning: "Tas" },
+        { kana: "ぶた", romaji: "buta", meaning: "Babi" },
+        { kana: "ぼうし", romaji: "boushi", meaning: "Topi" },
+        { kana: "ぱん", romaji: "pan", meaning: "Roti" },
+        { kana: "さんぽ", romaji: "sanpo", meaning: "Jalan santai" },
+        { kana: "ぱぱ", romaji: "papa", meaning: "Ayah" }
+      ],
+      katakana: [
+        { kana: "イカ", romaji: "ika", meaning: "Cumi-cumi" },
+        { kana: "ケア", romaji: "kea", meaning: "Perawatan" },
+        { kana: "エコ", romaji: "eko", meaning: "Ramah lingkungan" },
+        { kana: "アイス", romaji: "aisu", meaning: "Es krim" },
+        { kana: "キス", romaji: "kisu", meaning: "Cium" },
+        { kana: "カサ", romaji: "kasa", meaning: "Payung" },
+        { kana: "テスト", romaji: "tesuto", meaning: "Tes" },
+        { kana: "トイレ", romaji: "toire", meaning: "Toilet" },
+        { kana: "タコ", romaji: "tako", meaning: "Gurita" },
+        { kana: "ナイフ", romaji: "naifu", meaning: "Pisau" },
+        { kana: "ネコ", romaji: "neko", meaning: "Kucing" },
+        { kana: "イヌ", romaji: "inu", meaning: "Anjing" },
+        { kana: "ホテル", romaji: "hoteru", meaning: "Hotel" },
+        { kana: "ハム", romaji: "hamu", meaning: "Ham" },
+        { kana: "ヒント", romaji: "hinto", meaning: "Petunjuk" },
+        { kana: "マスク", romaji: "masuku", meaning: "Masker" },
+        { kana: "ミルク", romaji: "miruku", meaning: "Susu" },
+        { kana: "メモ", romaji: "memo", meaning: "Catatan" },
+        { kana: "カメラ", romaji: "kamera", meaning: "Kamera" },
+        { kana: "タイヤ", romaji: "taiya", meaning: "Ban" },
+        { kana: "クラス", romaji: "kurasu", meaning: "Kelas" },
+        { kana: "キロ", romaji: "kiro", meaning: "Kilo" },
+        { kana: "サラダ", romaji: "sarada", meaning: "Salad" },
+        { kana: "ワイン", romaji: "wain", meaning: "Anggur" },
+        { kana: "レモン", romaji: "remon", meaning: "Lemon" },
+        { kana: "メロン", romaji: "meron", meaning: "Melon" }
+      ]
+    };
+
     const ROADMAP_MONTHS = [
       {
         month: "Bulan 1: Pondasi Huruf & Angka",
@@ -1104,11 +1309,18 @@
     let strokes = [];
     let quizStrokes = [];
 
+    let quizPreferOptions = false;
     let quizStreak = 0;
     let quizCorrect = 0;
     let quizTotal = 0;
     let currentQuiz = null;
     let quizAnswered = false;
+
+    let wordCorrect = 0;
+    let wordTotal = 0;
+    let currentWord = null;
+    let wordSlots = [];
+    let wordAnswered = false;
 
     const canvas = document.getElementById("draw-canvas");
     const quizCanvas = document.getElementById("quiz-canvas");
@@ -1490,6 +1702,9 @@
       if (activeTab === "quiz") {
         renderQuizPacketToggles();
         nextQuizQuestion();
+      } else if (activeTab === "wordquiz") {
+        renderWordPacketToggles();
+        nextWordQuestion();
       }
     }
 
@@ -1552,11 +1767,13 @@
       const panels = {
         draw: document.getElementById("panel-draw"),
         quiz: document.getElementById("panel-quiz"),
+        wordquiz: document.getElementById("panel-wordquiz"),
         roadmap: document.getElementById("panel-roadmap")
       };
       const tabs = {
         draw: document.getElementById("tab-draw"),
         quiz: document.getElementById("tab-quiz"),
+        wordquiz: document.getElementById("tab-wordquiz"),
         roadmap: document.getElementById("tab-roadmap")
       };
 
@@ -1585,11 +1802,15 @@
       } else if (mode === "quiz") {
         renderQuizPacketToggles();
         nextQuizQuestion();
+      } else if (mode === "wordquiz") {
+        renderWordPacketToggles();
+        nextWordQuestion();
       }
     }
 
     document.getElementById("tab-draw").addEventListener("click", () => switchTab("draw"));
     document.getElementById("tab-quiz").addEventListener("click", () => switchTab("quiz"));
+    document.getElementById("tab-wordquiz").addEventListener("click", () => switchTab("wordquiz"));
     document.getElementById("tab-roadmap").addEventListener("click", () => switchTab("roadmap"));
 
     function shuffle(arr) {
@@ -1611,11 +1832,10 @@
       return pool.length > 0 ? pool : packets[0].items;
     }
 
-    function renderQuizPacketToggles() {
+    function renderPacketToggleGrid(containerId, onChangeFn) {
       const packets = getCurrentPackets();
-      const st = getCurrentState();
-      const selected = st.quizPackets;
-      const container = document.getElementById("quiz-packet-toggles");
+      const selected = getCurrentState().quizPackets;
+      const container = document.getElementById(containerId);
       container.innerHTML = "";
 
       packets.forEach((pkt, idx) => {
@@ -1632,14 +1852,24 @@
           } else {
             selected.add(idx);
           }
-          renderQuizPacketToggles();
-          nextQuizQuestion();
+          onChangeFn();
         });
         container.appendChild(btn);
       });
+    }
+
+    function renderQuizPacketToggles() {
+      const packets = getCurrentPackets();
+      const st = getCurrentState();
+      const selected = st.quizPackets;
+
+      renderPacketToggleGrid("quiz-packet-toggles", () => {
+        renderQuizPacketToggles();
+        nextQuizQuestion();
+      });
 
       const pool = getQuizPool();
-      document.getElementById("quiz-pool-count").textContent = `${pool.length} Huruf aktif`;
+      document.getElementById("quiz-pool-count").textContent = `${pool.length} Huruf`;
 
       const isUpto = selected.size === st.packetIdx + 1 &&
         [...selected].every((i) => i <= st.packetIdx);
@@ -1651,9 +1881,15 @@
       document.getElementById("quiz-preset-all").className = `btn btn-sm${isAll ? " btn-primary" : ""}`;
     }
 
+    function updateQuizModeButtons() {
+      document.getElementById("quiz-mode-input").className = `btn btn-sm${!quizPreferOptions ? " btn-primary" : ""}`;
+      document.getElementById("quiz-mode-choice").className = `btn btn-sm${quizPreferOptions ? " btn-primary" : ""}`;
+    }
+
     function nextQuizQuestion() {
       quizAnswered = false;
       quizStrokes = [];
+      updateQuizModeButtons();
       const pool = getQuizPool();
       const modeItems = getCurrentPackets().flatMap((p) => p.items);
 
@@ -1685,25 +1921,15 @@
 
       hintText.classList.add("hidden");
       hintBtn.classList.remove("hidden");
-      optionsEl.classList.add("hidden");
-      useOptionsBtn.classList.remove("hidden");
 
       if (mode === "kana-to-romaji") {
-        promptLabel.textContent = "Ketik bacaan huruf ini:";
+        promptLabel.textContent = quizPreferOptions ? "Pilih bacaan huruf ini:" : "Ketik bacaan huruf ini:";
         promptMain.textContent = target.kana;
         promptMain.style.fontSize = "64px";
-        textArea.classList.remove("hidden");
-        drawArea.classList.add("hidden");
-        textInput.value = "";
-        textInput.disabled = false;
-        setTimeout(() => textInput.focus(), 20);
       } else {
-        promptLabel.textContent = "Gambar huruf Jepang untuk:";
+        promptLabel.textContent = quizPreferOptions ? "Pilih huruf yang tepat untuk:" : "Gambar huruf Jepang untuk:";
         promptMain.textContent = `"${target.romaji.toUpperCase()}"`;
         promptMain.style.fontSize = "36px";
-        drawArea.classList.remove("hidden");
-        textArea.classList.add("hidden");
-        renderQuizCanvas();
       }
       hintText.textContent = `💡 ${target.mnemonic}`;
 
@@ -1717,8 +1943,30 @@
         optionsEl.appendChild(btn);
       });
 
-      document.getElementById("quiz-feedback-text").innerHTML =
-        "Jawab langsung, atau klik <strong>🧩 Pakai Pilihan</strong> jika lupa.";
+      if (quizPreferOptions) {
+        optionsEl.classList.remove("hidden");
+        textArea.classList.add("hidden");
+        drawArea.classList.add("hidden");
+        useOptionsBtn.classList.add("hidden");
+        document.getElementById("quiz-feedback-text").textContent = "Pilih satu jawaban yang paling tepat.";
+      } else {
+        optionsEl.classList.add("hidden");
+        useOptionsBtn.classList.remove("hidden");
+        if (mode === "kana-to-romaji") {
+          textArea.classList.remove("hidden");
+          drawArea.classList.add("hidden");
+          textInput.value = "";
+          textInput.disabled = false;
+          setTimeout(() => textInput.focus(), 20);
+        } else {
+          drawArea.classList.remove("hidden");
+          textArea.classList.add("hidden");
+          renderQuizCanvas();
+        }
+        document.getElementById("quiz-feedback-text").innerHTML =
+          "Jawab langsung, atau klik <strong>🧩 Pakai Pilihan</strong> jika lupa.";
+      }
+
       document.getElementById("quiz-next-btn").classList.add("hidden");
     }
 
@@ -1825,6 +2073,16 @@
 
     document.getElementById("quiz-next-btn").addEventListener("click", nextQuizQuestion);
 
+    document.getElementById("quiz-mode-input").addEventListener("click", () => {
+      quizPreferOptions = false;
+      nextQuizQuestion();
+    });
+
+    document.getElementById("quiz-mode-choice").addEventListener("click", () => {
+      quizPreferOptions = true;
+      nextQuizQuestion();
+    });
+
     document.getElementById("quiz-preset-upto").addEventListener("click", () => {
       const st = getCurrentState();
       st.quizPackets = new Set();
@@ -1846,6 +2104,177 @@
       renderQuizPacketToggles();
       nextQuizQuestion();
     });
+
+    function getAvailableWords() {
+      const selectedChars = new Set(getQuizPool().map((it) => it.kana));
+      const bank = WORD_BANK[activeScript] || [];
+      if (activeScript === "tenten") {
+        const baseHira = new Set(SCRIPT_MODES.hiragana.packets.flatMap((p) => p.items.map((it) => it.kana)));
+        return bank.filter((w) => {
+          const chars = [...w.kana];
+          return chars.every((ch) => selectedChars.has(ch) || baseHira.has(ch)) &&
+                 chars.some((ch) => selectedChars.has(ch));
+        });
+      }
+      return bank.filter((w) => [...w.kana].every((ch) => selectedChars.has(ch)));
+    }
+
+    function renderWordPacketToggles() {
+      renderPacketToggleGrid("word-packet-toggles", () => {
+        renderWordPacketToggles();
+        nextWordQuestion();
+      });
+      const words = getAvailableWords();
+      document.getElementById("word-pool-count").textContent = `${words.length} Kata tersedia`;
+    }
+
+    function renderAllWordCanvases() {
+      wordSlots.forEach((slot) => {
+        renderCanvasSurface(slot.canvas, slot.strokes, wordAnswered ? slot.char : null);
+      });
+    }
+
+    function nextWordQuestion() {
+      wordAnswered = false;
+      const words = getAvailableWords();
+      const emptyMsg = document.getElementById("word-empty-msg");
+      const playArea = document.getElementById("word-play-area");
+
+      if (words.length === 0) {
+        emptyMsg.classList.remove("hidden");
+        playArea.classList.add("hidden");
+        return;
+      }
+
+      emptyMsg.classList.add("hidden");
+      playArea.classList.remove("hidden");
+
+      const pool = currentWord && words.length > 1
+        ? words.filter((w) => w.kana !== currentWord.kana)
+        : words;
+      currentWord = pool[Math.floor(Math.random() * pool.length)];
+
+      document.getElementById("word-prompt-romaji").textContent = currentWord.romaji.toUpperCase();
+      document.getElementById("word-prompt-meaning").textContent = `(${currentWord.meaning})`;
+
+      const canvasesWrap = document.getElementById("word-canvases");
+      canvasesWrap.innerHTML = "";
+      wordSlots = [];
+
+      [...currentWord.kana].forEach((ch, idx) => {
+        const slotWrap = document.createElement("div");
+        slotWrap.className = "word-slot";
+
+        const frame = document.createElement("div");
+        frame.className = "word-canvas-frame";
+
+        const c = document.createElement("canvas");
+        c.width = 200;
+        c.height = 200;
+
+        const slotObj = { char: ch, strokes: [], canvas: c, badgeEl: null };
+        attachCanvasPointerHandlers(c, () => slotObj.strokes, () => {
+          renderCanvasSurface(slotObj.canvas, slotObj.strokes, wordAnswered ? slotObj.char : null);
+        });
+
+        const footer = document.createElement("div");
+        footer.className = "word-slot-footer";
+
+        const label = document.createElement("span");
+        label.style.color = "var(--muted)";
+        label.style.fontWeight = "700";
+        label.textContent = `Huruf ${idx + 1}`;
+        slotObj.badgeEl = label;
+
+        const clr = document.createElement("button");
+        clr.type = "button";
+        clr.className = "btn btn-sm";
+        clr.style.minHeight = "26px";
+        clr.style.padding = "2px 8px";
+        clr.textContent = "↺";
+        clr.title = "Hapus kotak ini";
+        clr.addEventListener("click", () => {
+          if (wordAnswered) return;
+          slotObj.strokes = [];
+          renderCanvasSurface(slotObj.canvas, slotObj.strokes, null);
+        });
+
+        frame.appendChild(c);
+        footer.appendChild(label);
+        footer.appendChild(clr);
+        slotWrap.appendChild(frame);
+        slotWrap.appendChild(footer);
+        canvasesWrap.appendChild(slotWrap);
+
+        wordSlots.push(slotObj);
+        renderCanvasSurface(c, slotObj.strokes, null);
+      });
+
+      document.getElementById("word-feedback-text").innerHTML =
+        "Tulis setiap huruf di kotaknya masing-masing, lalu klik <strong>✓ Cek Kata</strong>.";
+      document.getElementById("word-check-btn").classList.remove("hidden");
+      document.getElementById("word-next-btn").classList.add("hidden");
+    }
+
+    function handleWordCheck() {
+      if (wordAnswered || !currentWord) return;
+
+      const results = wordSlots.map((slot) => scoreStrokesAgainstKana(slot.strokes, slot.char));
+      if (results.some((r) => !r.ok)) {
+        document.getElementById("word-feedback-text").textContent =
+          "Lengkapi gambar di semua kotak huruf terlebih dahulu ya!";
+        return;
+      }
+
+      wordAnswered = true;
+      wordTotal++;
+      const allPass = results.every((r) => r.score >= 55);
+      if (allPass) wordCorrect++;
+
+      results.forEach((r, idx) => {
+        const slot = wordSlots[idx];
+        const pass = r.score >= 55;
+        slot.badgeEl.textContent = `${slot.char} ${r.score}% ${pass ? "✓" : "✕"}`;
+        slot.badgeEl.style.color = pass ? "var(--fg)" : "var(--tone-b-fg)";
+      });
+
+      renderAllWordCanvases();
+      document.getElementById("word-score").textContent = `${wordCorrect}/${wordTotal}`;
+      document.getElementById("word-feedback-text").innerHTML = allPass
+        ? `<strong>✓ Bagus!</strong> Kata yang benar: <strong>${currentWord.kana}</strong> (${currentWord.romaji} = ${currentWord.meaning}).`
+        : `<strong>✕ Belum semua pas.</strong> Bentuk benarnya: <strong>${currentWord.kana}</strong> (${currentWord.romaji}). Lihat bayangan di kotak!`;
+
+      document.getElementById("word-check-btn").classList.add("hidden");
+      document.getElementById("word-next-btn").classList.remove("hidden");
+    }
+
+    document.getElementById("word-add-p1-btn").addEventListener("click", () => {
+      getCurrentState().quizPackets.add(0);
+      renderWordPacketToggles();
+      nextWordQuestion();
+    });
+
+    document.getElementById("word-audio-btn").addEventListener("click", () => {
+      if (currentWord) speakKana(currentWord.kana);
+    });
+
+    document.getElementById("word-hint-btn").addEventListener("click", () => {
+      if (!currentWord) return;
+      const chars = [...currentWord.kana];
+      document.getElementById("word-feedback-text").innerHTML =
+        `💡 Petunjuk: Kata <strong>${currentWord.romaji.toUpperCase()}</strong> terdiri dari <strong>${chars.length} huruf</strong> (huruf pertama: <strong>${chars[0]}</strong>).`;
+    });
+
+    document.getElementById("word-clear-btn").addEventListener("click", () => {
+      if (wordAnswered) return;
+      wordSlots.forEach((slot) => {
+        slot.strokes = [];
+      });
+      renderAllWordCanvases();
+    });
+
+    document.getElementById("word-check-btn").addEventListener("click", handleWordCheck);
+    document.getElementById("word-next-btn").addEventListener("click", nextWordQuestion);
 
     function renderRoadmap() {
       const container = document.getElementById("roadmap-list");
@@ -1896,6 +2325,7 @@
       window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
         renderCanvas();
         renderQuizCanvas();
+        renderAllWordCanvases();
       });
     }
 
